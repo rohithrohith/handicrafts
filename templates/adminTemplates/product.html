@@ -1,0 +1,35 @@
+{% extends 'adminTemplates/admin-layout.html' %}
+{% block body %}
+
+<head>
+    <style>
+        .product {
+            padding: 10px;
+            border: grey 1px solid;
+        }
+
+        .img-div {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<div class="product">
+    <div class="head-info">
+        <h1 style="font-size: 1.5rem; font-weight: normal;text-transform: capitalize;">{{product.product_name|safe}}
+            <span style="font-size: .7rem;">{{product.product_type|safe}}</span>
+        </h1>
+        <small>Sold by: <i style="text-transform: capitalize;">{{product.seller|safe}}</i></small>
+    </div>
+    <div class="img-div">
+        <img src="/static/productImages/{{product.product_img|safe}}" alt="{{product.product_name|safe}}">
+    </div>
+    <div class="price" style="margin: 10px 0;">
+        <b style="white-space: pre-line;">Price: </b>₹ {{product.price|safe}}.00,
+        <b style="white-space: pre-line;">Quantity left: </b>{{product.product_quantity_left|safe}},
+        <b style="white-space: pre-line;">Times sold: </b>{{product.times_sold|safe}}
+    </div>
+    <div class="desc">
+        {{product.product_desc|safe}}
+    </div>
+</div>
+{% endblock %}

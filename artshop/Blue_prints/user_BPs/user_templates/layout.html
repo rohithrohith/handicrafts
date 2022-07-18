@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<link rel="icon" type="image/icon" href="/static/favicon/favicon.ico" />
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	{% block title %}{% endblock %}
+	<link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css?family=Satisfy&display=swap" rel="stylesheet" />
+	<script src="https://kit.fontawesome.com/b5f6f82057.js" crossorigin="anonymous"></script>
+	<script src="https://cdn.ckeditor.com/4.14.1/basic/ckeditor.js"></script>
+	<style>
+		/* ---------------GENERAL CSS----------------- */
+
+		:root {
+			--themeColor: #e44141;
+		}
+
+		body {
+			position: relative;
+		}
+
+		* {
+			overflow-x: hidden;
+			font-weight: normal;
+		}
+
+		.flash-div {
+			z-index: 5;
+			display: flex;
+			margin-bottom: 10px;
+			align-items: center;
+			border-radius: 5px;
+			padding: 0 20px;
+			width: 100%;
+			justify-content: space-between;
+		}
+
+		.success {
+			background: rgba(212, 237, 218, .7);
+			padding: 5px 10px;
+			border: #d4edda 2px solid;
+		}
+
+		.error {
+			background: rgba(248, 215, 218, .7);
+			padding: 5px 10px;
+			border: #f8d7da 2px solid;
+		}
+
+		.flash-error {
+			color: #721c24;
+		}
+
+		.flash-success {
+			color: #155724;
+		}
+
+		.flash-close {
+			font-size: 1.2rem;
+			font-weight: bolder;
+			padding: 2px;
+			cursor: pointer;
+		}
+
+		input::-webkit-outer-spin-button,
+		input::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+
+		textarea::-webkit-outer-spin-button,
+		textarea::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+
+		input[type=number] {
+			-moz-appearance: textfield;
+		}
+
+		.form-data {
+			display: flex;
+			margin-bottom: 15px;
+			position: relative;
+			flex-direction: column;
+		}
+
+		label {
+			font-size: 0.9rem;
+			pointer-events: none;
+			position: absolute;
+			width: 100%;
+			overflow: hidden;
+			height: 100%;
+		}
+
+		label .span {
+			position: absolute;
+			width: 100%;
+			padding-left: 5px;
+			height: 100%;
+			transition: all 0.2s ease;
+			top: 25px;
+		}
+
+		.input:not(:placeholder-shown):invalid+label .span {
+			color: red;
+			font-weight: bold;
+			top: 0;
+		}
+
+		.input:focus+label .span {
+			top: 0;
+			transition: all ease 0.2s;
+		}
+
+		.input[type=password]:focus+label .span,
+		.input:valid+label .span,
+		.input[type=password]:valid+label .span {
+			top: 0;
+			color: black;
+		}
+
+		.input {
+			margin-top: 15px;
+			padding-left: 5px;
+			height: 40px;
+			outline: none;
+			border: none;
+			border-bottom: black 0.5px solid;
+			font-size: 0.9rem;
+		}
+
+		.mobile {
+			position: relative;
+		}
+
+		.mobile::after {
+			content: '+91';
+			font-size: 13.33px;
+			display: flex;
+			background: #111;
+			color: white;
+			position: absolute;
+			border-bottom: 1px solid black;
+			height: 38px;
+			left: 0;
+			bottom: 0px;
+			justify-content: center;
+			align-items: center;
+			width: fit-content;
+			padding: 0 5px;
+		}
+
+		.assistance-link {
+			color: black;
+			text-decoration: underline;
+		}
+
+		.btn {
+			font-size: 1rem;
+			font-weight: normal;
+			display: block;
+			text-align: center;
+			cursor: pointer;
+			color: white;
+			outline: none;
+			background: var(--themeColor);
+			border: var(--themeColor) 1px solid;
+			width: fit-content;
+			height: fit-content;
+			padding: 5px 10px;
+			transition: .1s 0s ease-in;
+		}
+
+		.btn:hover {
+			color: var(--themeColor);
+			background: white;
+		}
+
+		.lead {
+			display: flex;
+			font-size: 1.5rem;
+			align-items: center;
+			margin-bottom: 3px;
+		}
+
+		#loading {
+			display: none;
+			position: fixed;
+			padding: 30px;
+			font-size: 2rem;
+			gap: 10px;
+			flex-direction: column;
+			align-items: center;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			max-width: 600px;
+			overflow: hidden;
+			box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.4), 0 1px 4px 0 rgba(0, 0, 0, 0.4);
+			height: fit-content;
+			background: rgba(255, 255, 255, 1);
+		}
+
+		.loader {
+			overflow: hidden;
+		}
+
+		.loader::before {
+			content: "";
+			box-sizing: border-box;
+			display: block;
+			width: 80px;
+			height: 80px;
+			text-align: center;
+			border-radius: 50%;
+			border: 3px solid lightgray;
+			border-top-color: var(--themeColor);
+			animation-name: load;
+			z-index: 3;
+			animation-duration: 1s;
+			animation-iteration-count: infinite;
+			animation-timing-function: linear;
+			animation-timing-function: ease-in-out;
+		}
+
+		@keyframes load {
+			to {
+				transform: rotate(360deg);
+			}
+		}
+
+		/* -----------------LAYOUT CSS-------------------- */
+
+		.container {
+			padding: 120px 10px 0 10px;
+			transition: margin .5s .2s ease;
+		}
+
+		#overlay {
+			position: absolute;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+			pointer-events: none;
+			z-index: 3;
+			transition: .5s .2s ease;
+		}
+
+		body {
+			position: relative;
+			min-height: 100vh;
+		}
+
+		.body-div {
+			transition: margin .5s .2s;
+		}
+
+
+
+		@media(max-width: 400px) {
+			form h1 {
+				font-size: 24px;
+			}
+
+			.btn {
+				padding: 5px;
+				font-size: .8rem;
+			}
+
+			label {
+				font-size: .8rem;
+			}
+
+			.assistance-link {
+				font-size: .8rem;
+				display: block;
+			}
+		}
+
+		@media(min-width: 750px) {
+			.container {
+				padding: 120px 145px 0 145px;
+			}
+		}
+
+		@media(min-width: 1024px) {
+			.container {
+				padding: 120px 170px 0 170px;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<div id="overlay"></div>
+	<div id="loading" class="loading">
+		<img src="/static/HandicraftsLogo1.png" alt="">
+		<h4>Loading...</h4>
+		<div class="loader"></div>
+	</div>
+	<div class="body-div" id="body">
+		{% include 'includes/_navbar.html' %}
+		<div class="container" id="container">
+			{% with messages =
+				get_flashed_messages(with_categories=true) %} {% if messages %} {% for
+				category, msg in messages %}
+			<div class="flash-div {{category|safe}}" id="flash-div">
+				<div class="flash-{{category|safe}}" id="flash">{{msg|safe}}</div>
+				<div class="flash-close" id="flash-close">&times;</div>
+			</div>
+			{% endfor %} {% endif %} {% endwith %}
+			{% block body %} {% endblock %}
+		</div>
+	</div>
+	<div class="footer-div" id="footer-div">
+		{% include 'includes/_footer.html' %}
+	</div>
+	<script>
+		var loadingDiv = document.getElementById('loading');
+		function loading() {
+			loadingDiv.style.display = 'flex';
+			document.getElementById('container').style.opacity = '0';
+			document.getElementById('footer-div').style.opacity = '0';
+			document.getElementById('navbar').style.opacity = '0';
+			document.title = "Loading...";
+		}
+		var flashCloser = document.getElementById('flash-close');
+		var flashDiv = document.getElementById('flash-div');
+		flashCloser.addEventListener('click', () => {
+			flashDiv.style.display = 'none';
+		});
+		setTimeout(() => {
+			document.getElementById('flash-div').style.display = 'none';
+		}, 10000);
+	</script>
+</body>
+
+</html>

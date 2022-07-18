@@ -1,0 +1,73 @@
+{% extends 'layout.html' %} {% block body %}
+
+<head>
+	<title>Handicrafts | Add address</title>
+	<style>
+		.form-div {
+			padding: 10px;
+		}
+
+		.address-form {
+			border: #eee solid 2px;
+			margin-top: 20px;
+			padding: 10px;
+			border-radius: 5px;
+		}
+
+		@media(min-width: 1024px) {
+			.address-form {
+				width: 50%;
+			}
+		}
+	</style>
+</head>
+<div class="form-div">
+	<form method="POST" onsubmit="loading()" class="address-form">
+		<h1 style="margin-bottom: 10px;">Add new address</h1>
+		<div class="form-data">
+			<input class="input" type="text" name="full-name" pattern="[a-zA-Z\s]+" placeholder=" "
+				style="text-transform:capitalize;" id="full-name" required />
+			<label for="full-name"><span class="span">Full name :</span></label>
+		</div>
+		<div class="form-data mobile">
+			<input class="input" type="text" style="padding-left:40px;" name="mobile-number" placeholder=" "
+				pattern="[0-9]{10}" maxlength="10" minlength="10" id="mobile-nbr" required />
+			<label for="mobile-nbr" style="margin-left:35px;"><span class="span">Mobile number :</span></label>
+		</div>
+		<div class="form-data">
+			<input class="input" type="text" name="house" pattern="[a-zA-Z0-9@#$%,:()\s]+" placeholder=" " id="house"
+				required />
+			<label for="house"><span class="span">Flat, House no., Building, Company, Apartment :</span></label>
+		</div>
+		<div class="form-data">
+			<input class="input" type="text" name="area" placeholder=" " pattern="[a-zA-Z0-9@#$%,:()\s]+" id="area"
+				required />
+			<label for="area"><span class="span">Area, Colony, Street, Sector, Village :</span></label>
+		</div>
+		<div class="form-data">
+			<input class="input" type="text" name="landmark" pattern="[a-zA-Z0-9@#$%,:()\s]+" placeholder=" "
+				id="landmark" required />
+			<label for="landmark"><span class="span">Landmark :</span></label>
+		</div>
+		<div class="form-data">
+			<input class="input" type="text" name="town" pattern="[a-zA-Z0-9@#$%,:()\s]+" placeholder=" " id="town"
+				required />
+			<label for="town"><span class="span">Town or city :</span></label>
+		</div>
+		<div class="form-data">
+			<input class="input" type="text" pattern="([0-9]{6})" maxlength="6" minlength="6" placeholder=" "
+				name="pin-number" id="pin-nbr" required />
+			<label for="pin-nbr"><span class="span">Pin :</span></label>
+		</div>
+		<div class="form-data">
+			<input class="input" type="text" name="state" pattern="[0-9a-zA-Z]+" placeholder=" " id="state" required />
+			<label for="state"><span class="span">State :</span></label>
+		</div>
+		<div class="form-data">
+			<button type="submit" class="btn" style="margin-top:10px;">
+				Add address
+			</button>
+		</div>
+	</form>
+</div>
+{% endblock %}

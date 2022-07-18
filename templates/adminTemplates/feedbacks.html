@@ -1,0 +1,148 @@
+{% extends 'adminTemplates/admin-layout.html' %}
+{% block body %}
+
+<head>
+    <style>
+        header {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .type-changer {
+            display: flex;
+            gap: 10px;
+        }
+
+        .user-table,
+        .seller-table {
+            margin-top: 10px;
+            font-size: .8rem;
+            overflow: scroll;
+            width: 100%;
+        }
+
+        td,
+        th {
+            font-weight: normal;
+            text-align: left;
+            vertical-align: top;
+            padding: 5px 10px;
+        }
+
+        .head-row {
+            background: #222;
+            display: grid;
+            position: relative;
+            grid-template-columns: 15% 15% 55% 15%;
+            color: white;
+        }
+
+        .heads {
+            border-right: white 2px solid;
+        }
+
+        .table-rows {
+            background: #ddd;
+            display: grid;
+            position: relative;
+            grid-template-columns: 15% 15% 55% 15%;
+        }
+
+        .table-rows:nth-child(even) {
+            background: #eee;
+        }
+
+        .cell {
+            border-right: white 2px solid;
+        }
+
+        .no-data-div {
+            padding: 10px;
+            margin-top: 10px;
+            display: block;
+            border: lightgrey 2px solid;
+        }
+
+        .active-btn {
+            padding: 5px;
+            border: black 1px solid;
+        }
+
+        .disabled-btn {
+            padding: 5px;
+            border: black 1px solid;
+        }
+    </style>
+</head>
+<header>
+    <h1 class="lead">Feedbacks</h1>
+    <div class="type-changers">
+        {% if accType == 'user' %}
+        <button href="button" disabled class="disabled-btn">Get buyers' feedbacks</button>
+        <a href="{{url_for('feedbacks',type='seller')}}" class="btn" style="display: inline-block;">Get sellers'
+            feedbacks</a>
+        {% else %}
+        <a href="{{url_for('feedbacks',type='user')}}" class="btn" style="display: inline-block;">Get buyers'
+            feedbacks</a>
+        <button type="button" disabled class="disabled-btn">Get sellers' feedbacks</button>
+        {% endif %}
+    </div>
+</header>
+
+<div style="margin-top: 10px;">
+    {% if accType == 'user' %}
+    {% if not udata=='no data' %}
+    <table class="user-table">
+        <tr class="head-row">
+            <th class="heads">User information</th>
+            <th class="heads">Feedback type</th>
+            <th class="heads">Feedback</th>
+            <th class="heads">Made on</th>
+        </tr>
+        {% for data in udata %}
+        <tr class="table-rows">
+            <td class="cell">User ID: {{data.user_id|safe}}
+                <br>
+                Name: {{data.name|safe}}
+            </td>
+            <td class="cell">{{data.feedback_type|safe}}</td>
+            <td class="cell">{{data.feedback|safe}}</td>
+            <td class="cell">{{data.made_on|safe}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <div class="no-data-div">
+        <h2 style="margin: 5px ;">No feedbacks found</h2>
+        <a href="{{url_for('adminPage')}}" class="btn">Main page</a>
+    </div>
+    {% endif %}
+    {% else %}
+    {% if not sdata == 'no data' %}
+    <table class="seller-table">
+        <tr class="head-row">
+            <th>seller information</th>
+            <th>Feedback type</th>
+            <th>Feedback</th>
+            <th>Made on</th>
+        </tr>
+        {% for data in sdata %}
+        <tr class="table-rows">
+            <td class="cell">{{data.user_id|safe}}</td>
+            <td class="cell">{{data.feedback_type|safe}}</td>
+            <td class="cell">{{data.feedback|safe}}</td>
+            <td class="cell">{{data.made_on|safe}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <div class="no-data-div">
+        <h2 style="margin: 5px 0;">No feedbacks found</h2>
+        <a href="{{url_for('adminPage')}}" class="btn">Main page</a>
+    </div>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'mail-layout.html' %}
+{% block body %}
+
+<head>
+    <style>
+        p,
+        .product-details {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<h1 style="font-weight: normal; font-size: 24px;">Hi, <span
+        style="text-transform:capitalize; color: #e44141;">{{data.user|safe}}</span>
+</h1>
+<p>
+    Your <b>{{data.product_name|safe}}</b>, <i>{{data.product_type|safe}}</i> ordered on
+    {{data.ordered_on[0:11]|safe}} has been
+    delivered on {{data.delivered_on[0:11]|safe}}.
+</p>
+<div>
+    <div class="product-details">
+        <div>
+            <img src="https://gracious-tesla-35e8db.netlify.app/productImages/{{data.product_img|safe}}" width="200px"
+                alt="">
+        </div>
+        <div style="margin-top: 10px;">{{data.product_name|safe}}</div>
+        <div>{{data.product_type|safe}}</div>
+        <div>M.R.P: Rs {{data.price|safe}}</div>
+        <b style="margin-top: 15px;">Delivered to:
+        </b>
+        <div style="white-space: pre-line; margin-top: -20px;">{{data.address|safe}}</div>
+    </div>
+</div>
+{% endblock %}

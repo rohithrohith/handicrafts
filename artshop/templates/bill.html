@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <link rel="shortcut icon" href="/static/seller-favicon/favicon.ico" type="image/x-icon">
+    <title>Bill | {{data.order_id|safe}}</title>
+    <style>
+        .payment-details {
+            margin-top: 60px;
+        }
+
+        th {
+            text-align: left;
+            vertical-align: center;
+            padding: 5px;
+            border-left: 1px solid black;
+            border-bottom: 1px solid black;
+            border-right: 1px solid black;
+        }
+
+        td {
+            text-align: left;
+            vertical-align: center;
+            padding: 5px;
+            border-left: 1px solid black;
+            border-right: 1px solid black;
+        }
+
+        .header {
+            width: 100%;
+            border: none;
+            background: none;
+        }
+
+        .header th,
+        .header td {
+            border: none;
+        }
+
+        .user-seller-details {
+            background: #eee;
+            border: none;
+        }
+
+        .user-seller-details td,
+        .user-seller-details th {
+            border: none;
+            padding: 5px;
+        }
+
+        .user,
+        .seller {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        table {
+            background: #eee;
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        .product {
+            padding: 10px;
+        }
+
+        .order-details {
+            margin-top: 60px;
+            width: 100%;
+            border: none;
+            background: none;
+        }
+
+        .order-details th,
+        .order-details td {
+            border: none;
+        }
+
+        .seller {
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <table class="header">
+            <tr>
+                <td class="img-div">
+                    <img src="data:image;base64,{{brandImage|safe}}" alt="" class="img">
+                </td>
+                <td>
+                    <div style="text-align: right;">Invoice/Cash memo(Original for buyer)</div>
+                </td>
+            </tr>
+        </table>
+        <div class="details" style="margin-top: 40px;">
+            <table style="width: 100%;" class="user-seller-details">
+                <tr style="padding: 10px; vertical-align: top;">
+                    <td class="user">
+                        <b>User details</b>
+                        <div style="text-transform:capitalize; padding: 5px 0;">{{data.name|safe}}</div>
+                        <div style="margin: 2px 0; white-space: pre;">{{data.address|safe}}</div>
+                        <div style="margin: 2px 0;">E-mail: {{data.email|safe}}</div>
+                    </td>
+                    <td class="seller">
+                        <b>Seller details</b>
+                        <div style="margin: 2px 0;">{{sadata.full_name|safe}}</div>
+                        <div style="margin: 2px 0; white-space: pre;">{{sadata.address|safe}}</div>
+                        <div style="margin: 2px 0;">Ph: {{sadata.mobile|safe}}</div>
+                        <div style="margin: 2px 0;">E-mail: {{data.seller_email|safe}}</div>
+                        <div style="margin: 2px 0;">GSTIN:<span
+                                style="text-transform: uppercase;">{{sadata.gstin|safe}}</span></div>
+                    </td>
+                </tr>
+            </table>
+            <table class="order-details">
+                <tr>
+                    <td class="order">
+                        <div>Order ID: {{data.order_id}}</div>
+                        <div>Order data: {{data.ordered_on}}</div>
+                    </td>
+                    <td class="order" style="text-align: right;">
+                        <div>Invoice ID: IN{{data.order_id}}</div>
+                        <div>Invoice date: {{getDateTime()|safe}}</div>
+                    </td>
+                </tr>
+            </table>
+            <div class="payment-details">
+                <table>
+                    <tr>
+                        <th>Sl.no</th>
+                        <th>Description</th>
+                        <th>Net price</th>
+                        <th>Tax rate</th>
+                        <th>Tax amount</th>
+                        <th>Total amount</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>
+                            <div>{{data.product_name|safe}}, {{data.product_type|safe}}</div>
+                            <div>Order ID: {{data.order_id|safe}}</div>
+                        </td>
+                        <td style="text-align: right;">Rs.{{data.price|safe}}</td>
+                        <td style="text-align: right;">18%</td>
+                        <td style="text-align: right;">Rs.{{gstp|safe}}</td>
+                        <td style="text-align: right;">Rs.{{tp|safe}}</td>
+                    </tr>
+                    <tr></tr>
+                    <tr>
+                        <td></td>
+                        <td>Shippment charges</td>
+                        <td style="text-align: right;">Rs.70.00</td>
+                        <td style="text-align: right;">18%</td>
+                        <td style="text-align: right;">Rs.00.00</td>
+                        <td style="text-align: right;">Rs.70.00</td>
+                    </tr>
+                    <tr style="border-top: 1px solid black;">
+                        <th>TOTAL</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th style="text-align: right;">Rs.{{ta|safe}}</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="sign" style="text-align: right; margin-top: 60px;">
+        <div>For {{data.seller_name}}</div>
+        <img src="data:image;base64,{{sign|safe}}" width="70px" height="40px" style="margin: 5px;" alt="">
+        <div>Authorized signatory</div>
+    </div>
+    </div>
+
+</body>
+
+</html>

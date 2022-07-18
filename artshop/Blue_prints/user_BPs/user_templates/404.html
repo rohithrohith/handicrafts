@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+<head>
+    <title>Handicrafts | 404</title>
+    <style>
+        .error-code {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .error-code img {
+            max-width: 60%;
+        }
+    </style>
+</head>
+<div class="error-code">
+    <img src="/artshop/static/resources/sellers/sellernotfound@2x.png" alt="">
+    <div id="timer" style="margin-top: 10px;"></div>
+</div>
+<script>
+    var time = 10;
+    window.onload = redirect();
+    function redirect() {
+        if (time < 0) {
+            window.history.back();
+        } else {
+            document.getElementById('timer').innerHTML = "Redirection to previous page in " + time + " seconds.";
+            time -= 1;
+            setTimeout(redirect, 1000);
+        }
+    }
+</script>
+
+{% endblock %}

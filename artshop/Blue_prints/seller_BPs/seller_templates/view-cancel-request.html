@@ -1,0 +1,67 @@
+{% extends 'seller-layout.html' %}
+{% block title %}Handicrafts sellers | Cancel request {% endblock %}
+{% block body %}
+
+<head>
+    <style>
+        .actions {
+            display: flex;
+            margin-top: 5px;
+            gap: 10px;
+        }
+
+        .rbtn {
+            font-size: 1rem;
+            font-weight: normal;
+            display: block;
+            cursor: pointer;
+            color: black;
+            outline: none;
+            background: #fff;
+            border: black 1px solid;
+            width: fit-content;
+            height: fit-content;
+            padding: 5px 10px;
+            transition: .1s 0s ease-in;
+        }
+
+        .rbtn:hover {
+            color: white;
+            background: black;
+            border: black 1px solid;
+        }
+
+        @media(max-width: 350px) {
+            .actions {
+                flex-direction: column;
+                gap: 0;
+
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<h1 style="font-size: 24px; font-weight: normal;">Cancellation request from user '{{data.name|safe}}' for the order
+    '{{data.order_id}}'
+</h1>
+<div class="reason" style="margin-top: 10px;"> <b> <u> Reason:</u></b> {{data.reason|safe}}</div>
+{% if not data.is_responsed %}
+<div class="actions">
+    <form action="{{url_for('seller.cancelOrder')}}" method="post" style="margin-top: 10px;">
+        <input type="hidden" name="order-id" value="{{data.order_id}}">
+        <input type="hidden" name="action" value="accept">
+        <input type="submit" value="Accept cancellation" class="btn">
+    </form>
+    <form action="{{url_for('seller.cancelOrder')}}" method="post" style="margin-top: 10px;">
+        <input type="hidden" name="order-id" value="{{data.order_id}}">
+        <input type="hidden" name="action" value="reject">
+        <input type="submit" value="Reject request" class="rbtn">
+    </form>
+</div>
+{% else %}
+<i style="display: block; margin-top: 20px; color: red;">Already responded</i>
+{% endif %}
+{% endblock %}

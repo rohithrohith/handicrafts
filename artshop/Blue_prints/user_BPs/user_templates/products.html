@@ -1,0 +1,203 @@
+{% extends 'layout.html' %} {% block body %}
+
+<head>
+	<title>Handicrafts | Products</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		.section-head {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 10px;
+		}
+
+		.head-lead {
+			font-size: 1rem;
+		}
+
+		.small {
+			font-size: .6rem;
+			margin-left: 5px;
+		}
+
+		.sort-link {
+			color: var(--themeColor);
+			font-size: .7rem;
+		}
+
+		.products {
+			display: grid;
+			gap: 5px;
+			grid-template-columns: repeat(2, 1fr);
+			width: 100%;
+		}
+
+		.product-rows {
+			display: grid;
+			grid-template-rows: 60% 40%;
+		}
+
+		.product {
+			height: 340px;
+			padding: 5px;
+			border: 1px solid lightgrey;
+			border-radius: 5px;
+			display: grid;
+			grid-template-rows: 100% 0;
+		}
+
+		.product-img {
+			height: 100%;
+			width: 100%;
+		}
+
+		.product-info {
+			padding-left: 5px;
+			width: auto;
+			display: flex;
+			text-transform: capitalize;
+			flex-direction: column;
+			justify-content: space-around;
+			background: white;
+			color: black;
+			font-size: .9rem;
+		}
+
+		.price,
+		.name {
+			font-size: 1rem;
+			font-weight: bold;
+		}
+
+		.seller {
+			font-size: 0.8rem;
+		}
+
+		.type {
+			font-weight: 300;
+			font-style: italic;
+		}
+
+		.desc {
+			display: none;
+		}
+
+		.no-product {
+			padding: 5px;
+			border: 2px solid lightgrey;
+			border-radius: 5px;
+		}
+
+		@media (max-width:340px) {
+			.products {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		@media(min-width: 1024px) {
+
+			.product {
+				display: grid;
+				height: 200px;
+				width: 100%;
+				grid-template-columns: 100%;
+			}
+
+			.product-img {
+				width: 100%;
+			}
+
+			.product-rows {
+				display: flex;
+				width: 100%;
+			}
+
+			.product-info {
+				margin-left: 5px;
+				width: 100%;
+			}
+
+			.prod-img-div {
+				width: 60%;
+			}
+
+			.head-lead {
+				font-size: 1.2rem;
+			}
+
+			.sort-link {
+				font-size: .85rem;
+			}
+
+			.small {
+				font-size: 0.8rem;
+				margin-left: 10px;
+			}
+
+			.desc {
+				display: block;
+				font-weight: normal;
+				font-size: .9rem;
+			}
+		}
+	</style>
+</head>
+<section class="products-section">
+	<div class="section-head">
+		<h1 class="head-lead">
+			All results<small class="small">{{nbrOfProducts|safe}} products found</small>
+		</h1>
+		<div class="sort">
+			{% if not sort == 'True' %}
+			<a href="/products?keyword={{keyword|safe}}&sort=True" class="sort-link">price low to high</a>
+			{% else %}
+			<a href="/products?keyword={{keyword|safe}}&sort=False" class="sort-link">Remove sort</a>
+			{% endif %}
+		</div>
+	</div>
+	{% if not data == 'no product' %}
+	<div class="products">
+		{% for product in data %}
+		<div class="product" onclick="loading()">
+			<a href="/view/product/{{product.product_id|safe}}" class="product-rows">
+				<div style="overflow: hidden;" class="prod-img-div">
+					<img src="/static/productImages/{{product.product_img|safe}}" alt="product" class="product-img" />
+				</div>
+				<div class="product-info">
+					<div class="name">
+						{{product.product_name|safe}}
+					</div>
+					<div class="type">{{product.product_type|safe}}</div>
+					<div class="price">M.R.P: ₹ {{product.price|safe}}</div>
+					<div class="status">
+						{% if not product.product_quantity_left == 0 %}
+						<small style="color: green;">Product is available</small>
+						{% else %}
+						<small style="color: red;">Product is not available</small>
+						{% endif %}
+					</div>
+					<div class="rating"><i class="fas fa-star" style="color: gold;"></i> {{product.rating|safe}}
+						({{product.number_of_raters}})</div>
+					<div class="desc">
+						{{product.product_desc[:70]|safe}}
+					</div>
+					<div class="seller">Sold by <i>{{product.seller|safe}}</i></div>
+				</div>
+			</a>
+		</div>
+		{% endfor %}
+	</div>
+	{% else %}
+	<div class="no-product">
+		<h1 style="margin: 5px ;">
+			No such products found!
+		</h1>
+		<a onclick="loading()" style="margin: 5px;" href="/home" class="btn">Back to home!</a>
+	</div>
+	{% endif %}
+</section>
+{% endblock %}

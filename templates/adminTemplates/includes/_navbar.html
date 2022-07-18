@@ -1,0 +1,83 @@
+<head>
+    <style>
+        nav {
+            display: flex;
+            z-index: 3;
+            position: fixed;
+            width: 100%;
+            padding: 20px 150px;
+            justify-content: space-between;
+            background: #222;
+            border-bottom: #aaa solid 2px;
+            align-items: center;
+            transition: margin .5s ease-in-out;
+        }
+
+        .list {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: white;
+            font-size: 1rem;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            color: lightgrey;
+        }
+
+        .right-nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .brand-link {
+            color: white;
+            display: block;
+            font-size: 1rem;
+            text-decoration: none;
+        }
+
+        .pending {
+            position: relative;
+        }
+
+        .pending::after {
+            content: '';
+            position: absolute;
+            background: red;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<nav id="navbar">
+    <div class="left-nav">
+        <div class="brand">
+            <a href="#container" class="brand-link">HC Admin</a>
+        </div>
+    </div>
+    <div class="right-nav">
+        <ul class="list">
+            <li class="nav-list"><a href="{{url_for('adminPage')}}" class="nav-link">Home</a></li>
+            <li class="nav-list"><a href="{{url_for('feedbacks',type='user')}}" class="nav-link">Feedbacks</a></li>
+            <li class="nav-list"><a href="{{url_for('reviews',filter=False)}}" class="nav-link">Reviews</a></li>
+            {% if session.is_hc_admin_signin %}
+            {% if isPending() %}
+            <li class="nav-list"><a href="{{url_for('pendingWork')}}" class="nav-link pending">Pending Work</a>
+            </li>
+            {% endif %}
+            {% endif %}
+            {% if session.is_hc_admin_signin %}
+            <li class="nav-list"><a href="{{url_for('adminLogout')}}" class="nav-link">Log out</a></li>
+            {% else %}
+            <li class="nav-list"><a href="{{url_for('index')}}" class="nav-link">Signin</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>

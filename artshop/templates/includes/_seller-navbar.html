@@ -1,0 +1,243 @@
+<head>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			font-family: 'Nunito', sans-serif;
+			box-sizing: border-box;
+		}
+
+		a {
+			color: black;
+			text-decoration: none;
+		}
+
+		.seller-navbar {
+			background: white;
+			position: fixed;
+			box-shadow: 0 2px white;
+			z-index: 5;
+			width: 100%;
+			background-position: center;
+			padding: 10px;
+			border-bottom: black 1.5px solid;
+			display: flex;
+			flex-direction: column;
+		}
+
+		ul {
+			list-style: none;
+		}
+
+		.brand {
+			display: flex;
+			width: 80%;
+		}
+
+		.brand-img {
+			width: 100%;
+			height: 100%;
+		}
+
+		.main-nav {
+			display: flex;
+			background: white;
+			justify-content: space-between;
+			width: 100%;
+			align-items: center;
+		}
+
+		.nav-right {
+			display: flex;
+			align-items: center;
+		}
+
+		.seller-signin-link,
+		.seller-dashboard-link {
+			padding: 5px;
+			font-size: .8rem;
+			background: none;
+			max-width: 100px;
+			margin-right: 20px;
+			border: black 1px solid;
+		}
+
+		.seller-dashboard-link {
+			text-transform: capitalize;
+			transition: .2s .1s ease-in;
+		}
+
+		.acc-link {
+			margin-right: 20px;
+			text-align: center;
+		}
+
+
+		.menu-block {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.menu-bar {
+			height: 25px;
+			cursor: pointer;
+		}
+
+		.slide-nav {
+			position: fixed;
+			display: block;
+			width: 0;
+			background: white;
+			z-index: 10;
+			text-align: left;
+			padding: 20px;
+			height: 100%;
+			margin-left: -300px;
+			top: 0;
+			transition: all .5s .2s ease;
+		}
+
+		.slide-nav-list {
+			position: absolute;
+			left: 30px;
+			top: 50%;
+			transform: translateY(-50%);
+		}
+
+		.slide-nav-item {
+			margin-top: 30px;
+		}
+
+		.slide-nav-link:hover {
+			color: var(--themeColor);
+		}
+
+		.close {
+			overflow: hidden;
+			padding: 5px;
+			position: absolute;
+			right: 10px;
+			text-align: right;
+			transition: transform .5s .2s ease;
+		}
+
+		.close img {
+			cursor: pointer;
+			transform: scale(.7);
+		}
+
+		.slide-nav-link {
+			color: black;
+			font-size: 1.2rem;
+		}
+
+		@media(max-width:400px) {
+			.acc-link {
+				display: none;
+			}
+		}
+
+		@media(min-width: 750px) {
+			.seller-navbar {
+				padding: 10px 150px 10px 150px;
+			}
+		}
+
+		@media(min-width: 1024px) {
+			.seller-navbar {
+				padding: 10px 180px 10px 180px;
+			}
+		}
+	</style>
+</head>
+<div class="slide-nav" id="slide-nav">
+	<div class="close" id="close" title="Close nav">
+		<img src="/static/sellerClose.png" alt="">
+	</div>
+	<ul class="slide-nav-list">
+		{% if session.is_seller_signined %}
+		<li class="slide-nav-item">
+			<a href="{{url_for('seller.sellerDashboard',businessname=session.seller_name|safe)}}"
+				class="slide-nav-link">Dashboard</a>
+		</li>
+		<li class="slide-nav-item">
+			<a href="{{url_for('seller.sellerOrders',businessname=session.seller_name|safe)}}"
+				class="slide-nav-link">Orders</a>
+		</li>
+		<li class="slide-nav-item">
+			<a href="{{url_for('seller.sellerAccount',businessname=session.seller_name|safe)}}"
+				class="slide-nav-link">Your
+				account</a>
+		</li>
+		<li class="slide-nav-item">
+			<a href="{{url_for('seller.sellerAccountDelete',businessname=session.seller_name|safe)}}"
+				class="slide-nav-link">Delete account</a>
+		</li>
+		<li class="slide-nav-item">
+			<a href="{{url_for('seller.sellerLogout')}}" class="slide-nav-link">Log out</a>
+		</li>
+		{% else %}
+		<li class="slide-nav-item">
+			<a href="{{url_for('seller.sell')}}" class="slide-nav-link">Home</a>
+		</li>
+		<li class="slide-nav-item">
+			<a href="{{url_for('seller.sellerSignin')}}" class="slide-nav-link">Sign in</a>
+		</li>
+		<li class="slide-nav-item">
+			<a href="{{url_for('seller.sellerRegisterSellSignup')}}" class="slide-nav-link">Register</a>
+		</li>
+		{% endif %}
+	</ul>
+</div>
+<nav class="seller-navbar" id="seller-navbar">
+
+	<div class="main-nav">
+		<div class="nav-left">
+			<a href="/seller.handicrafts" class="brand">
+				<img src="{{url_for('static', filename='HandicraftsSellersLogo2.png')}}" class="brand-img">
+			</a>
+		</div>
+		<div class="nav-right">
+			{% if session.is_seller_signined %}
+			<a href="{{url_for('seller.sellerAccount',businessname=session.seller_name|safe)}}"
+				class="acc-link have-title">
+				<span class="title" style="margin: 10px 0 0 30px;">My account</span>
+				<i class="fas fa-user-circle" style="color: grey; font-size: 1.5rem; display:block;"></i>
+			</a>
+			<a href="{{url_for('seller.sellerDashboard',businessname=session.seller_name|safe)}}"
+				class="nav-link seller-dashboard-link" onclick="loading()"
+				style="position: relative; text-align: center;">Hi,
+				{{session.seller_name | safe}}
+			</a>
+			{% else %}
+			<a href="{{url_for('seller.sellerSignin')}}" class="nav-link seller-signin-link">Sign in</a>
+			{% endif %}
+			<img src="/static/sellerMenuIcon.png" alt="menu" class="menu-bar" id="menu" />
+		</div>
+	</div>
+
+
+
+</nav>
+<script>
+	var menu = document.getElementById('menu');
+	var slideNav = document.getElementById('slide-nav');
+	var Close = document.getElementById('close');
+
+	menu.addEventListener('click', (e) => {
+		slideNav.style.width = '300px';
+		document.getElementById('footer').style.marginLeft = '300px';
+		document.getElementById('body').style.marginLeft = '300px';
+		document.getElementById('container').style.marginRight = '-300px';
+		document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,.2)';
+	});
+	Close.addEventListener('click', (e) => {
+		slideNav.style.width = '0';
+		document.getElementById('footer').style.marginLeft = '0';
+		document.getElementById('body').style.marginLeft = '0';
+		document.getElementById('container').style.marginRight = '0';
+		document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
+	});
+
+</script>

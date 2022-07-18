@@ -1,0 +1,95 @@
+{% extends 'seller-layout.html' %}
+{% block title %}Handicrafts sellers {% endblock %}
+{% block body %}
+
+<head>
+	<style>
+		.head-section {
+			background: url('/static/sellerbg.jpg') no-repeat;
+			position: relative;
+			display: flex;
+			align-items: center;
+			height: 40vh;
+			background-position-y: center;
+			background-size: cover;
+		}
+
+		.lead-content {
+			padding: 10px;
+			position: absolute;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.lead {
+			font-size: 2rem;
+			width: 60%;
+			margin-bottom: 20px;
+			color: white;
+		}
+
+		.seller-register-btn {
+			color: #000;
+			background: white;
+			border: none;
+			text-align: center;
+			width: 160px;
+			border-radius: 10px;
+			font-size: 1.4rem;
+			padding: 2px 8px;
+		}
+
+		.seller-register-btn:hover {
+			background: #eee;
+		}
+
+		.why-sell-on-handicrafts {
+			padding: 10px;
+			text-align: center;
+		}
+
+		.section-head {
+			font-size: 2rem;
+		}
+
+		.section-desc {
+			margin-bottom: 10px;
+			font-size: 1.2rem;
+		}
+
+		.seller-register-btn-dark {
+			color: #fff;
+			background: var(--themeColor);
+			border: none;
+			text-align: center;
+			width: 160px;
+			border-radius: 10px;
+			font-size: 1.5rem;
+			padding: 4px 8px;
+		}
+
+		.seller-register-btn:hover {
+			background: #eee;
+		}
+	</style>
+</head>
+<section class="head-section">
+	<div class="lead-content">
+		<div class="lead">Sell your works on Handicrafts.</div>
+		<a href="/seller.handicrafts/register/step/signup" class="seller-register-btn">Start selling</a>
+	</div>
+</section>
+<section id="why-sell-on-handicrafts" class="why-sell-on-handicrafts">
+	<h1 class="section-head">Why sell on Handicrafts?</h1>
+	<p class="section-desc">
+		Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta, similique
+		iusto? Voluptatibus ratione modi esse temporibus id? Voluptatem consectetur
+		error accusamus ratione amet eos, eveniet quasi non assumenda voluptatibus
+		pariatur consequuntur repellendus molestias ad ut atque, adipisci, quaerat
+		vitae aperiam nisi? Nam molestias similique fugit voluptatem expedita,
+		veritatis sed temporibus id quae dolorum minima facilis labore, beatae error
+		totam soluta!
+	</p>
+	<a href="/seller.handicrafts/register/step/signup" class="seller-register-btn-dark">Start selling</a>
+</section>
+{% endblock %}

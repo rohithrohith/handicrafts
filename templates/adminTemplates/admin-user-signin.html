@@ -1,0 +1,55 @@
+{% extends 'adminTemplates/admin-layout.html' %}
+{% block body %}
+
+<head>
+    <style>
+        .signin-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -70%);
+        }
+
+        .signin-card {
+            padding: 20px;
+            background: white;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4), 0 1px 4px rgba(0, 0, 0, .4);
+        }
+
+        .card-head {
+            font-size: 2rem;
+            padding: 10px 0;
+            border-bottom: 1px solid lightgrey;
+        }
+
+        .card-content {
+            margin-top: 10px;
+        }
+
+        @media(max-width: 750px) {
+            .signin-card {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<div class="signin-container">
+    <div class="signin-card">
+        <div class="card-head">Signin</div>
+        <div class="card-content">
+            <form class="admin-signin-form" style="padding-bottom: 10px;" method="POST">
+                <div class="form-data">
+                    <label for="uid">User ID</label>
+                    <input type="text" pattern="HCADMIN+[0-9]{3}" name="admin-id" maxlength="10" placeholder=" "
+                        minlength="10" class="input" required>
+                </div>
+                <div class="form-data">
+                    <label for="uid">Password</label>
+                    <input type="password" name="ad-password" class="input" required>
+                </div>
+                <input type="submit" value="Signin" class="btn">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

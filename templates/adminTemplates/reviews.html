@@ -1,0 +1,91 @@
+{% extends 'adminTemplates/admin-layout.html' %}
+{% block body %}
+
+<head>
+    <style>
+        header {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rr-table {
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        td,
+        th {
+            font-weight: normal;
+            text-align: left;
+            vertical-align: top;
+            padding: 5px 10px;
+        }
+
+        .head-row {
+            background: #222;
+            color: white;
+        }
+
+        .table-rows {
+            background: #ddd;
+        }
+
+        .table-rows:nth-child(even) {
+            background: #eee;
+        }
+
+        .no-data-div {
+            padding: 10px;
+            margin-top: 10px;
+            border: lightgrey 2px solid;
+        }
+    </style>
+</head>
+<header>
+    <h1 class="lead">User reviews</h1>
+    {% if is_filter == 'False' %}
+    <a href="{{url_for('reviews',filter=True)}}" class="btn">Get this month ratings</a>
+    {% else %}
+    <a href="{{url_for('reviews',filter=False)}}" class="btn">All ratings and reviews</a>
+    {% endif %}
+</header>
+
+<div>
+    {% if not data=='no data' %}
+    <table class="rr-table">
+        <tr class="head-row">
+            <th class="heads">Product details</th>
+            <th class="heads">User</th>
+            <th class="heads">Rating</th>
+            <th class="heads">Review</th>
+            <th class="heads">Rated on</th>
+        </tr>
+        {% for d in data %}
+        <tr class="table-rows">
+            <td class="cell"><b>Product ID:</b> {{d.product_id|safe}}
+                <br><b>Name:</b> {{d.product_name}}<br>
+                <a href="{{url_for('viewProduct',id=d.product_id|safe)}}"><u>View product</u></a>
+
+            </td>
+            <td class="cell">{{d.user|safe}}</td>
+            <td class="cell"><i class="fas fa-star" style="color: gold;"></i> {{d.rating|safe}}</td>
+            <td class="cell">
+                {% if d.review=='0' %}
+                <span style="color:grey;">No review</span>
+                {% else %}
+                {{d.review|safe}}</td>
+            <td class="cell">{{d.rated_on|safe}}</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <div class="no-data-div">
+        <span style="font-size: 1.4rem;">No ratings given for any products! nothing here</span>
+        <a href="{{url_for('adminPage')}}" style="margin: 10px 0 5px 0;" class="btn">Back to home</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

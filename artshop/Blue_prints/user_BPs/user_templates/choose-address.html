@@ -1,0 +1,147 @@
+{% extends 'layout.html' %} {% block body %}
+
+<head>
+	<title>Handicrafts | Choose address</title>
+	<style>
+		.address {
+			border: 1.5px solid lightgrey;
+			padding: 10px;
+			margin-bottom: 5px;
+			border-radius: 5px;
+			display: flex;
+			align-items: top;
+		}
+
+		.radio {
+			color: var(--themeColor);
+			cursor: pointer;
+			height: 20px;
+			margin-top: 10px;
+			width: 20px;
+		}
+
+		.address-label {
+			margin-left: 10px;
+		}
+
+		.continue-to-checkout-btn {
+			background: var(--themeColor);
+			width: fit-content;
+			font-size: 1rem;
+			color: white;
+			padding: 3px 5px;
+			border: none;
+			border-radius: 5px;
+		}
+
+		.new-address-form {
+			border: lightgrey solid 2px;
+			padding: 10px;
+			border-radius: 5px;
+		}
+
+		.form-data {
+			display: flex;
+			margin-bottom: 10px;
+			flex-direction: column;
+		}
+
+		.input {
+			height: 40px;
+			outline: none;
+			border: none;
+			border-bottom: black 0.5px solid;
+			font-size: 0.9rem;
+		}
+
+		@media(min-width: 1024px) {
+			.choose-address-container {
+				width: 50%;
+			}
+		}
+	</style>
+</head>
+<div class="choose-address-container">
+	<h1>Choose delivery address</h1>
+	<small style="display: block; margin: 5px 0 10px 0;">This address is also considered for the billing
+		address</small>
+	{% if not addresses=='no addresses' %}
+	<div class="choose-address-form">
+		<form onsubmit="loading()" action="/buy/makepayment/checkout" method="POST">
+			{% for address in addresses %}
+			<div class="address">
+				<input type="radio" class="radio" value="{{address.address_id|safe}}" name="address-id"
+					id="{{address.address_id|safe}}" required />
+				<div class="address-label">
+					<h3 style="text-transform: capitalize;">
+						<b>{{address.full_name}}</b>
+					</h3>
+					<div style="white-space:pre-line; margin-top: -20px;">
+						{{address.address|safe}}
+					</div>
+					<div class="capitalize">
+						phone: {{address.mobile|safe}}
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+			<input type="submit" value="Continue to checkout" class="btn" style="margin-top: 15px;" />
+		</form>
+	</div>
+	{% else %}
+	<div style="padding: 10px; border: lightgrey 2px solid; border-radius: 5px;">
+		<h3 style="margin-bottom: 5px;">You don't have any addresses add one down here</h3>
+		<a href="#new-address" class="btn" style="margin-top: 10px;">Add address</a>
+	</div>
+	{% endif %}
+	<h1 style="margin: 10px 0;" id="new-address">Choose new address</h1>
+	<div class="new-form-div">
+		<form method="POST" class="new-address-form" action="/buy/makepayment/newaddress/checkout" onsubmit="loading()">
+			<div class="form-data">
+				<input class="input" type="text" name="full-name" pattern="[a-zA-Z\s]+" placeholder=" "
+					style="text-transform:capitalize;" id="full-name" required />
+				<label for="full-name"><span class="span">Full name :</span></label>
+			</div>
+			<div class="form-data mobile">
+				<input class="input" type="text" name="mobile-number" style="padding-left: 40px;" placeholder=" "
+					pattern="[0-9]{10}" maxlength="10" minlength="10" id="mobile-nbr" required />
+				<label for="mobile-nbr" style="margin-left:32px;"><span class="span">Mobile number :</span></label>
+			</div>
+			<div class="form-data">
+				<input class="input" type="text" pattern="([0-9]{6}|[0-9]{3}\s[0-9]{3})" maxlength="7" minlength="7"
+					placeholder=" " name="pin-number" id="pin-nbr" required />
+				<label for="pin-nbr"><span class="span">Pin :</span></label>
+			</div>
+			<div class="form-data">
+				<input class="input" type="text" name="house" pattern="[a-zA-Z0-9@#$%,:()\s]+" placeholder=" "
+					id="house" required />
+				<label for="house"><span class="span">Flat, House no., Building, Company, Apartment :</span></label>
+			</div>
+			<div class="form-data">
+				<input class="input" type="text" name="area" placeholder=" " pattern="[a-zA-Z0-9@#$%,:()\s]+" id="area"
+					required />
+				<label for="area"><span class="span">Area, Colony, Street, Sector, Village :</span></label>
+			</div>
+			<div class="form-data">
+				<input class="input" type="text" name="landmark" pattern="[a-zA-Z0-9@#$%,:()\s]+" placeholder=" "
+					id="landmark" required />
+				<label for="landmark"><span class="span">Landmark :</span></label>
+			</div>
+			<div class="form-data">
+				<input class="input" type="text" name="town" pattern="[a-zA-Z0-9@#$%,:()\s]+" placeholder=" " id="town"
+					required />
+				<label for="town"><span class="span">Town or city :</span></label>
+			</div>
+
+			<div class="form-data">
+				<input class="input" type="text" name="state" pattern="[0-9a-zA-Z\s]+" placeholder=" " id="state"
+					required />
+				<label for="state"><span class="span">State :</span></label>
+			</div>
+			<div class="form-data">
+				<input type="submit" value="Add address" class="btn" style="margin-top: 10px;" />
+			</div>
+		</form>
+	</div>
+</div>
+{% endblock %}

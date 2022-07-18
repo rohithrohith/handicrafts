@@ -1,0 +1,34 @@
+{% extends 'mail-layout.html' %}
+{% block body %}
+
+<head>
+    <style>
+        .verify-link {
+            padding: 5px 20px;
+            display: inline-block;
+            border: #e44141 1px solid;
+            width: fit-content;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+
+        .verify-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<div class="mail-container">
+    <h1>Welcome to Handicrafts</h1>
+    <h3>Thanks for signing up, <span style="text-transform: capitalize; color: #e44141;">{{user|safe}}</span>
+    </h3>
+    <p style="margin-top: 10px;">Please verify your email address to get access to complete handicrafts features!<b
+            style="color: #e44141;">
+            Thank you!</b></p>
+    <p style="margin-top: 10px;"><a href="http://{{action|safe}}" style="color: #e44141;" class="verify-link">Verify
+            here</a></p>
+    <div style="margin-top: 20px;">
+        <div>Thank you,</div>
+        <div>handicrafts seller</div>
+    </div>
+</div>
+{% endblock %}

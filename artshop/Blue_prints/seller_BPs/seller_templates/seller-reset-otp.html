@@ -1,0 +1,93 @@
+{% extends 'seller-layout.html' %}
+{% block title %}Handicrafts sellers | Reset password {% endblock %}
+{% block body %}
+
+<head>
+    <style>
+        .seller-forms {
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .seller-resend-otp {
+            border: none;
+            text-decoration: underline;
+            background: none;
+            padding: 5px 2px;
+        }
+
+        .hidden-form-datas {
+            display: none;
+        }
+
+        .show-hidden {
+            display: block;
+        }
+
+        .submit {
+            color: white;
+            background: var(--themeColor);
+            border: var(--themeColor) 1px solid;
+            width: fit-content;
+            height: fit-content;
+            border-radius: 5px;
+            padding: 5px 10px;
+        }
+
+        @media(min-width: 1024px) {
+            .seller-forms {
+                width: 50%;
+            }
+        }
+    </style>
+</head>
+<div class="seller-reset-otp-container">
+    <div class="seller-form-div">
+        <div class="seller-forms">
+            <h1 class="lead"><i class="fas fa-key" style="margin-right: 10px;"></i>Reset password</h1>
+            <form method="POST" action="/seller.handicrafts/resetpassword" class="seller-otp-form"
+                style="margin-top: 10px;" id="otp-form">
+
+                <div class="form-data">
+                    <label for="seller-otp">Enter the otp sent to your
+                        E-mail:</label>
+                    <input type="text" name="seller-otp" id="seller-otp" value="" class="input" pattern="[a-zA-Z0-9]{6}"
+                        placeholder="Enter OTP" required />
+
+                </div>
+                <div id="hidden-form-datas" class="hidden-form-datas">
+                    <div class="form-data">
+                        <label for="seller-new-password">New password:</label>
+                        <input type="password" name="seller-new-password" id="seller-new-password"
+                            placeholder="New password" class="input" required />
+
+                    </div>
+                    <div class="form-data">
+                        <label for="seller-confirm-new-password">Confirm new password:</label>
+                        <input type="password" placeholder="Confirm new password" name="seller-confirm-new-password"
+                            id="seller-confirm-new-password" class="input" required />
+
+                    </div>
+                </div>
+                <input type="submit" value="Submit OTP" class="btn" />
+            </form>
+            <form action="/forgotpassword" method="POST" class="seller-resend-otp">
+                <input type="hidden" value="{{session.email|safe}}" name="seller-forgot-email">
+                <input type="submit" value="Resend OTP" class="seller-resend-otp">
+            </form>
+        </div>
+    </div>
+</div>
+{% block script %}
+<script>
+    var otp = document.getElementById('seller-otp');
+    var passwordInputs = document.getElementById('hidden-form-datas');
+    otp.addEventListener('input', (e) => {
+        val = e.target.value;
+        if (val.length == 6) {
+            passwordInputs.className = 'show-hidden';
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %}

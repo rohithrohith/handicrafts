@@ -1,0 +1,199 @@
+{% extends 'seller-layout.html' %}
+{% block title %}Handicrafts seller | Order summary{% endblock %}
+{% block body %}
+
+<head>
+	<style>
+		.add-product-form {
+			padding: 10px;
+		}
+
+		.product-form-lead {
+			margin-bottom: 10px;
+			color: var(--themeColor);
+		}
+
+		.file-form-data {
+			position: relative;
+			text-align: center;
+			margin-top: 10px;
+			height: 100px;
+		}
+
+		.file-label {
+			position: absolute;
+			border: 1.5px solid #aaa;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+			pointer-events: none;
+			background: #fff;
+		}
+
+		.file-input:focus {
+			outline: none;
+		}
+
+		.file-input {
+			height: 100%;
+			width: 100%;
+		}
+
+		.file-name {
+			display: none;
+		}
+
+		.file-input:not(:placeholder-shown):invalid {
+			outline: none;
+		}
+
+		.product-type {
+			height: 40px;
+			border: black 1px solid;
+			font-size: 1rem;
+			padding-left: 5px;
+			border-radius: 5px;
+		}
+
+		option {
+			height: 40px;
+		}
+
+		.show-img-btn {
+			padding: 10px;
+			background-color: #eee;
+			border-radius: 5px;
+			text-align: center;
+		}
+
+		.file-btn {
+			border: 1px solid #ccc;
+			color: black;
+			height: 40px;
+			width: 100%;
+			text-align: left;
+			background-color: white;
+			font-size: .75rem;
+			padding: 5px;
+		}
+
+		.file-btn-wrapper input[type='file'] {
+			font-size: .8rem;
+			position: absolute;
+			left: 0;
+			top: 0;
+			opacity: 0;
+		}
+
+		.add-product-btn {
+			height: fit-content;
+			font-size: 1rem;
+			width: fit-content;
+			padding: 5px 10px;
+			background: var(--themeColor);
+			border: var(--themeColor) 1px solid;
+			cursor: pointer;
+			color: white;
+		}
+
+		.add-product-btn:hover {
+			color: var(--themeColor);
+			background-color: white;
+		}
+
+		.preview-container {
+			text-align: center;
+			margin-top: 5px;
+			height: 0;
+		}
+
+		@media(min-width: 1024px) {
+			.add-product-form {
+				width: 50%;
+			}
+		}
+	</style>
+</head>
+
+<form onsubmit="loading()" class="add-product-form" method="POST" enctype="multipart/form-data">
+	<h1 class="lead" style="margin-bottom:10px;"><i class="fab fa-product-hunt" style="margin-right: 10px;"></i>Add
+		product and it's details</h1>
+	<div class="form-data">
+		<label for="product-name">Product name*</label>
+		<input class="input" type="text" name="product-name" pattern="[0-9a-zA-Z\s]{4,20}" maxlength="20"
+			placeholder="Name" id="product-name" style="text-transform:capitalize;" required />
+	</div>
+	<div class="form-data">
+		<label for="product-type">Product type*</label>
+		<input class="input" type="text" name="product-type" style="text-transform: capitalize;" maxlength="15"
+			pattern="[a-zA-Z\s]+" placeholder="Ex: Painting or Wood art" id="product-type" required />
+	</div>
+	<div class="form-data money">
+		<label for="product-price">Your price*</label>
+		<input class="input" type="number" pattern="[0-9]" style="margin-left: 43px;" name="product-price"
+			placeholder="Set price in INC" id="product-price" required />
+	</div>
+	<div class="form-data">
+		<label for="product-quantity">Quantity*</label>
+		<input class="input" type="number" name="product-quantity" pattern="{,3}" placeholder="Quantity"
+			id="product-quantity" required />
+	</div>
+	<div class="form-data">
+		<label for="product-desc">Product description*</label>
+		<textarea class="input" type="text" name="product-desc" style="height:100px" minlength="400" id="product-desc"
+			placeholder="Product description" required></textarea>
+	</div>
+	<div class="form-data">
+		<label for="product-artist">Artist</label>
+		<input class="input" type="text" pattern="[a-zA-Z0-9\s]+" style="text-transform: capitalize;"
+			name="product-artist" placeholder="Product artist" id="product-artist" />
+	</div>
+	<span>Add a product image *</span>
+	<div class="file-form-data">
+		<input class="input file-input" style="width: 100%; height: 100%;" type="file" name="product-img"
+			id="product-img" required />
+		<label for="product-desc" class="file-label">
+			<div id="no-image-content"><i class="fas fa-plus" style="color: #999; font-size: 1.5rem;"></i>
+				<div class="head" style="font-size: .9rem;">Drag and drop or Browse signature file
+				</div>
+				<small style="font-size: .8rem;">Allowed file formats are JPG,JPEG,PNG and PDF</small>
+			</div>
+			<div class="file-name" id="file-name">Change</div>
+		</label>
+	</div>
+	<input type="submit" value="Submit" style="margin-top: 10px;" class="btn">
+</form>
+<script>
+	CKEDITOR.replace('product-desc');
+	var preview = document.getElementById('show-img');
+	var img = document.getElementById('product-img');
+	var pusdoBtn = document.getElementById('file-btn');
+	var file = '';
+	img.addEventListener('change', (e) => {
+		file = document.querySelector(['input[type=file]']).files[0];
+		size = file.size;
+		size = parseInt(size) / (1024);
+		var fileExt = (file.name).split(".")[1];
+		if (fileExt == "png" | fileExt == "jpg" | fileExt == "jpeg" | fileExt == "jfif") {
+			if (size > .5) {
+				document.getElementById('no-image-content').style.display = 'none';
+				document.getElementById('file-name').style.display = 'block';
+				document.getElementById('file-name').style.color = '#aaa';
+				var content = document.getElementById('file-name').innerHTML
+				document.getElementById('file-name').innerHTML = content + "<h3>" + file.name + "</h3>";
+			}
+			else {
+				alert("File resolution too low! minimum must br 300KB")
+			}
+		} else {
+			alert('Invalid image format!')
+		}
+
+	});
+</script>
+{% endblock %}

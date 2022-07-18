@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=1">
+    <title>Handicrafts</title>
+    <link rel="shortcut icon" href="/static/seller-favicon/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css?family=satisfy&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            font-family: 'satisfy', sans-serif;
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+
+        .lead {
+            font-size: 1rem;
+        }
+
+        .navbar {
+            width: 100%;
+            padding: 0 10px;
+            border-bottom: black 2px solid;
+        }
+
+        .brand {
+            padding: 5px 0;
+            width: 50%;
+        }
+
+        .container {
+            margin-top: 10px;
+            padding: 0 10px;
+        }
+
+        footer {
+            background: black;
+            margin-top: 20px;
+            color: white;
+            padding: 10px;
+            width: 100%;
+        }
+
+
+        .row {
+            padding: 0 10px;
+            text-align: center;
+        }
+
+        .column {
+            text-align: center;
+        }
+
+        .btn {
+            font-size: 1rem;
+            font-weight: normal;
+            display: block;
+            cursor: pointer;
+            color: white;
+            outline: none;
+            background: #e44141;
+            border: #e44141 1px solid;
+            width: fit-content;
+            height: fit-content;
+            padding: 5px 10px;
+            transition: .1s 0s ease-in;
+        }
+
+        .btn:hover {
+            color: #e44141;
+            background: white;
+        }
+    </style>
+</head>
+
+<body>
+    {% if brand == 'seller' %}
+    <table class="navbar">
+        <td class="brand">
+            <img src="https://gracious-tesla-35e8db.netlify.app/HandicraftsSellersLogo2.png" alt="Handicrafts sellers">
+        </td>
+        <td style="text-align:right; font-size: .8rem;">
+            <a href="http://localhost:9000/seller.handicrafts/signin" style="color: black; text-align: right;"
+                target="_blank">View
+                using
+                browser
+            </a>
+        </td>
+    </table>
+    {% else %}
+    <table class="navbar">
+        <td class="brand">
+            <div class="brand-img"></div>
+            <img src="https://gracious-tesla-35e8db.netlify.app/HandicraftsLogo.png" width="120px" height="40px"
+                alt="Handicrafts">
+        </td>
+        <td style="text-align:right; font-size: .8rem;"><a href="http://localhost:9000/signin" target="_blank"
+                style="color: black; text-align: right;">View
+                using
+                browser
+            </a>
+        </td>
+    </table>
+    {% endif %}
+    <div class="container" id="container">
+        {% block body %}
+        {% endblock %}
+    </div>
+    <footer id="footer">
+        <div class="row">
+            {% if brand == 'seller' %}
+            <div class="footer-navbar">
+                <div class="footer-brand">
+                    <img src="https://gracious-tesla-35e8db.netlify.app/FooterHandicraftsSellersLogo.png"
+                        alt="Handicrafts sellers">
+                </div>
+            </div>
+            <div class="">Handicrafts seller</div>
+            {% else %}
+            <div class="footer-navbar">
+                <div class="footer-brand">
+                    <img src="https://gracious-tesla-35e8db.netlify.app/FooterHandicraftsLogo.png" width="120px"
+                        height="40px" alt="Handicrafts">
+                </div>
+            </div>
+            <div class="">Handicrafts</div>
+            {% endif %}
+            <div class="sender-details">
+                <div class="">services@handicrafts</div>
+                <div class=""></div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

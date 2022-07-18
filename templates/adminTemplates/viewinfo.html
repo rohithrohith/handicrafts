@@ -1,0 +1,108 @@
+{% extends '/adminTemplates/admin-layout.html' %}
+{% block body %}
+
+<head>
+    <style>
+        .pdf {
+            border: 2px solid lightgrey;
+            margin: 20px 0;
+            width: 100%;
+            height: 400px;
+        }
+
+        .view-container {
+            padding-bottom: 20px;
+        }
+
+        textarea {
+            outline: none;
+        }
+
+        .pdf::-webkit-outer-spin-button,
+        .pdf::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .response {
+            display: flex;
+            gap: 10px;
+        }
+
+        .response-btn {
+            padding: 5px 10px;
+            margin: 10px 0 20px 0;
+            cursor: pointer;
+            width: fit-content;
+        }
+
+        .reject-div {
+            display: none;
+        }
+    </style>
+</head>
+<div class="view-container">
+    <h1 class="lead" style="margin-bottom: 10px;">{{data.seller_name|safe}}'s Information</h1>
+    <div class="provided-info">
+        <ul class="info-list">
+            <li><b>{{data.seller_name|safe}}</b></li>
+            <li><b>E-mail: </b>{{data.seller_email|safe}}</li>
+            <li><b>PAN: </b>{{data.pan_nbr|safe}}</li>
+            <li><b>GSTIN: </b>{{data.gstin|safe}}</li>
+            <li style="white-space: pre-line;">
+                <b>Address:</b><br>{{data.full_name|safe}}<br>{{data.address|safe}},{{data.pin|safe}}</li>
+        </ul>
+        <embed class="pdf" src="/static/identityProofs/{{data.identity_proof|safe}}" frameborder="0"></embed>
+
+        <div class="response">
+            <form action="/admin/verification/response" method="POST" class="response-form">
+                <input type="hidden" name="seller-id" value="{{data.seller_id|safe}}">
+                <input type="hidden" name="response" value="accept">
+                <input type="submit" id="accept-btn" class="response-btn" value="Accept">
+            </form>
+            <form action="/admin/verification/response" method="POST" class="response-form" id="response-form"
+                style="width: 100%;">
+                <input type="hidden" name="seller-id" value="{{data.seller_id|safe}}">
+                <input type="hidden" name="response" value="reject">
+                <button type="button" class="response-btn" id="reject-next-btn">Reject</button>
+                <div class="reject-div" id="reject-div">
+                    <select name="reject-reason" id="reject-reason"
+                        style="height: 40px; outline-color: #aaa; background: #eee;" required>
+                        <option selected disabled>Select reason*</option>
+                        <option value="1" class="reject-option">Quality of submitted documents is
+                            very low.</option>
+                        <option value="2" class="reject-option">Wrong documents provided.</option>
+                        <option value="3" class="reject-option">Insufficient information provided.</option>
+                        <option value="4" class="reject-option">Information entered and document information does not
+                            match.
+                        </option>
+                    </select>
+                    <button type="button" id="reject-btn" class="response-btn">Reject</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    var nxtRejectBtn = document.getElementById('reject-next-btn');
+    var RejectDiv = document.getElementById('reject-div');
+    var acceptBtn = document.getElementById('accept-btn');
+    var Rejectbtn = document.getElementById('reject-btn');
+    var select = document.getElementById('reject-reason');
+    nxtRejectBtn.addEventListener('click', () => {
+        RejectDiv.style.display = 'flex';
+        RejectDiv.style.flexDirection = 'column';
+        RejectDiv.style.gap = '10px';
+        acceptBtn.style.display = 'none';
+        nxtRejectBtn.style.display = 'none';
+    });
+    Rejectbtn.addEventListener('click', () => {
+        sValue = select.value;
+        if (sValue == 'Select reason*') {
+            alert('Select rejection reason!');
+        } else {
+            document.getElementById('response-form').submit();
+        }
+    });
+</script>
+{% endblock %}

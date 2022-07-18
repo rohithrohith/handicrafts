@@ -1,0 +1,394 @@
+{% extends 'layout.html' %} {% block body %}
+
+<head>
+	<title>Handicrafts | Your orders</title>
+	<style>
+		.orders {
+			margin-top: 10px;
+			display: grid;
+			gap: 10px;
+			grid-template-columns: 1fr 1fr;
+		}
+
+		.order {
+			display: grid;
+			position: relative;
+			margin-bottom: 5px;
+			padding: 5px;
+			border: lightgrey 1.5px solid;
+			border-radius: 5px;
+			height: 390px;
+			grid-template-rows: 1fr 1fr;
+		}
+
+		.prod-img-div {
+			overflow: hidden;
+			width: 100%;
+			height: 100%;
+		}
+
+		.prod-img {
+			height: 100%;
+			width: 100%;
+		}
+
+		.prod-info {
+			display: flex;
+			flex-direction: column;
+			font-size: .8rem;
+			justify-content: space-evenly;
+			text-transform: capitalize;
+		}
+
+		.price,
+		.name {
+			font-size: 1rem;
+			font-weight: bold;
+		}
+
+		.seller {
+			font-size: 0.8rem;
+		}
+
+		.desc {
+			display: none;
+		}
+
+		.type {
+			font-weight: 300;
+			font-style: italic;
+		}
+
+		.order-actions {
+			display: flex;
+		}
+
+		.rate-product {
+			margin-top: 5px;
+			cursor: pointer;
+			width: fit-content;
+		}
+
+		.buy-form {
+			margin-right: 3px;
+		}
+
+		.buy-btn {
+			background: var(--themeColor);
+			color: white;
+			font-size: 1rem;
+			border-radius: 5px;
+			border: none;
+			padding: 2px 5px;
+		}
+
+		.noproducts {
+			padding: 5px;
+			border: lightgrey solid 1.5px;
+			border-radius: 5px;
+		}
+
+		.cancelled-btn {
+			color: white;
+			background: var(--themeColor);
+			display: block;
+			padding: 5px 10px;
+			border: var(--themeColor) 1px solid;
+			font-size: 1rem;
+			cursor: pointer;
+		}
+
+		.rate-card-div {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			margin-left: -600px;
+			background: #eee;
+			height: 100%;
+			transition: margin .5s ease-in-out;
+		}
+
+		.card-head {
+			letter-spacing: 1px;
+		}
+
+		.card-head,
+		.card-footer {
+			display: flex;
+			font-size: 1rem;
+			padding: 0 10px;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.rate-card {
+			width: 100%;
+			height: 100%;
+			display: grid;
+			grid-template-rows: 20% 80%;
+		}
+
+		.card-content {
+			background: white;
+			margin-top: 5px;
+			padding: 5px 10px;
+			display: grid;
+			grid-template-rows: 1fr;
+			width: 100%;
+		}
+
+		.rate-form {
+			height: 100%;
+			margin-top: 5px;
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+		}
+
+		.rate-for-div {
+			display: flex;
+			align-items: center;
+		}
+
+		.rating {
+			width: 50px;
+			border: #aaa solid 1.5px;
+			padding: 5px;
+			width: 100%;
+			outline: none;
+		}
+
+		.rating:not(:placeholder-shown):invalid {
+			border: red 1.5px solid;
+		}
+
+		.re-sub-div textarea {
+			border: 1.5px solid #aaa;
+			height: 60px;
+		}
+
+		textarea:focus {
+			outline: black solid 1.5px;
+		}
+
+		.re-sub-div {
+			display: flex;
+			gap: 10px;
+			flex-direction: column;
+		}
+
+		.review {
+			width: 100%;
+			height: 95%;
+			padding: 5px 0 0 5px;
+		}
+
+		.rate-btn {
+			padding: 5px 10px;
+			background: #eee;
+			border: #aaa 1.5px solid;
+			cursor: pointer;
+		}
+
+		.lower-form {
+			height: 100%;
+			display: grid;
+			grid-template-rows: 80% 20%;
+		}
+
+
+		@media(max-width:750px) {
+
+			.wi-set,
+			.btn {
+				font-size: .9rem;
+			}
+		}
+
+		@media(max-width: 400px) {
+			.order-actions {
+				flex-direction: column;
+			}
+
+			.order {
+				display: flex;
+				height: 250px !important;
+			}
+
+			.orders {
+				grid-template-columns: 1fr;
+			}
+
+			.prod-info {
+				padding-left: 5px;
+			}
+
+			.prod-img-div {
+				width: 60%;
+			}
+		}
+
+		@media(max-width: 500px) {
+			.order-actions {
+				flex-direction: column;
+			}
+
+			.buy-form {
+				margin-bottom: 3px;
+				margin-right: 0;
+			}
+
+			.prod-info {
+				margin-left: 0;
+			}
+
+			.order {
+				height: 430px;
+			}
+
+			.btn {
+				width: 100%;
+				text-align: center;
+			}
+		}
+
+		@media(min-width: 1150px) {
+			.prod-img-div {
+				width: 50%;
+			}
+
+			.prod-info {
+				margin-left: 10px;
+			}
+
+			.order {
+				display: flex;
+				height: 210px;
+			}
+		}
+	</style>
+</head>
+<div class="orders-container">
+	<h1 class="lead">Your orders</h1>
+	{% if not orders == 'no orders' %}
+	<div class="orders">
+		{% for order in orders %}
+		<div class="order">
+			<div class="rate-card-div" id="card-div-{{order.order_id|safe}}">
+				<div class="rate-card">
+					<div class="card-head">{{order.product_name|safe}}
+						<div style="cursor: pointer;" onclick="closeCard('{{order.order_id|safe}}')">
+							&times;</div>
+					</div>
+					<div class="card-content">
+						<form action="/rate/product/{{order.product_id|safe}}" method="post" class="rate-form">
+							<div class="rate-for-div">
+								<input type="text" class="rating" name="rating" step=".1" placeholder="Rate from 1-5"
+									id="rating" pattern="[1-5]{1}" required>
+								<input type="hidden" name="order-id" value="{{order.order_id|safe}}">
+							</div>
+							<div class="re-sub-div">
+								<div style="display: flex; align-items: center;">
+									<textarea type="text" name="review" id="review" class="review"
+										placeholder="Write a review..."></textarea>
+								</div>
+
+								<div style="display: flex; align-items: center; position: relative;"><input
+										type="submit" value="Rate" class="rate-btn"></div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="prod-img-div">
+				<img src="/static/productImages/{{order.product_img|safe}}" alt="{{order.product_name|safe}}"
+					class="prod-img" />
+			</div>
+			<div class="prod-info">
+				<div class="name">{{order.product_name|safe}}</div>
+				<div class="type">{{order.product_type|safe}}</div>
+				<div class="seller">Sold by {{order.seller|safe}}</div>
+				<div class="order-id">Order id: {{order.order_id|safe}}</div>
+				<div class="price">M.R.P: ₹ {{order.price|safe}}</div>
+				<div class="status" style="font-weight: bold;">
+					{% if order.current_status=='Cancelled' %}
+					<span style="color: red;">{{order.current_status|safe}}</span>
+					<div class="ordered-on" style="margin-top: 5px;">On:{{order.cancelled_on|safe}}</div>
+					{% else %}
+					{% if order.current_status=='Product delivered' %}
+					<span style="color: green; font-weight: bold;">{{order.current_status|safe}}</span>
+					<div class="ordered-on" style="margin-top: 5px;">On:{{order.delivered_on|safe}}</div>
+					{% if order.is_rated %}
+					<div class="rate-product" onclick="alert('Already rated ({{order.rating|safe}} stars)');">
+						<b><u>Rated
+								({{order.rating|safe}})</u></b></div>
+					{% else %}
+					<div class="rate-product" onclick="rate('{{order.order_id|safe}}')"><b><u>Rate
+								product</u></b></div>
+					{% endif %}
+					{% else %}
+					{% if order.cancel_request and not order.is_responsed %}
+					<span style="color: red;">Cancellation requestd</span>
+					<div style="margin-top: 5px;">On:{{order.ordered_on|safe}}</div>
+					{% else %}
+					{% if order.cancel_request and order.is_responsed %}
+					<span>{{order.current_status|safe}}</span>
+					<div style="margin-top: 5px;">On:{{order.ordered_on|safe}}</div>
+					{% else %}
+					{% if order.current_status=='Ready to dispatch' %}
+					<span>{{order.current_status|safe}}</span>
+					<div style="margin-top: 5px;">On:{{order.packed_on|safe}}</div>
+					{% else %}
+					{% if order.current_status=='Product dispatched' %}
+					<span>{{order.current_status|safe}}</span>
+					<div style="margin-top: 5px;">On:{{order.dispatched_on|safe}}</div>
+					{% else %}
+					<span>{{order.current_status|safe}}</span>
+					<div style="margin-top: 5px;">On:{{order.ordered_on|safe}}</div>
+					{% endif %}
+					{% endif %}
+					{% endif %}
+					{% endif %}
+					{% endif %}
+					{% endif %}
+				</div>
+
+				<div class="order-actions">
+					{% if not order.is_cancelled and not order.current_status=='Cancellation requested' and not order.current_status=='Product delivered' and not order.cancel_request %}
+					<form action="/yourorders/requestcancellation" id="cancel-order" method="POST">
+						<input type="hidden" name="order_id" value="{{order.order_id}}">
+						<button class="btn wi-set" type="button">Request cancel</button>
+					</form>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+	{% else %}
+	<div class="noproducts">
+		<h3 style="margin-bottom: 10px;">
+			You haven't ordered anything yet!
+		</h3>
+		<a href="{{url_for('user.home')}}" style="width: fit-content;" class="btn">Back to home</a>
+	</div>
+	{% endif %}
+</div>
+<script>
+	function rate(id) {
+		divId = "card-div-" + String(id);
+		document.getElementById(divId).style.marginLeft = '0';
+	}
+	function closeCard(id) {
+		divId = "card-div-" + String(id);
+		document.getElementById(divId).style.marginLeft = '-600px';
+	}
+	var cancel = document.getElementById('cancel-order');
+	cancel.addEventListener('click', () => {
+		if (confirm('Are you sure to cancel this order?')) {
+			cancel.submit();
+		}
+	});
+</script>
+{% endblock %}

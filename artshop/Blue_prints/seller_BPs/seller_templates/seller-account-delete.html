@@ -1,0 +1,77 @@
+{% extends 'seller-layout.html' %}
+{% block title %}Handicrafts | Delete account{% endblock %}
+{% block body %}
+
+<head>
+    <style>
+        #delete-reason {
+            width: 100%;
+        }
+
+        .delete-btn {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<div class="delete-seller-acc-container">
+    <h1 class="lead"><i class="fas fa-user-minus" style="margin-right: 10px;"></i>Delete your seller account</h1>
+
+    <p style="margin-top: 10px;">
+        Once your account is closed, it is no longer accessible by you or anyone
+        else; you won't be able to access your order history or print a proof of
+        purchase or an invoice.
+    </p>
+    <div class="delete-info" style="margin-top: 10px;">
+        <h3>If you delete, you won't have access to:</h3>
+        <ol class="details-list" style="margin-left: 10px; list-style: none;">
+            <li class="detail">Your account history.</li>
+            <li class="detail">Your products.</li>
+            <li class="detail">Your stats.</li>
+            <li class="detail">Any details of your's on this site.</li>
+        </ol>
+    </div>
+    <div class="seller-delete-form-div">
+        <form onsubmit="loading()" class="seller-delete-form" method="POST">
+            <div class="form-data">
+                <span style="font-weight: bold; margin: 10px 0;">Tell us why you wish to delete your account:</span>
+                <textarea name="delete-reason" id="delete-reason" cols="30" rows="5"
+                    style="margin-top:10px; display: block; height: auto; padding: 10px;" required></textarea>
+            </div>
+            <span class="btn" style="margin-top: 10px;" id="nxt-btn" onclick="nextStep()">
+                Next
+            </span>
+            <div id="nxt-steps" style="display: none;">
+                <div class="form-data" style="margin-top: 10px;">
+                    <label for="confirm-password-to-delete">Enter your password</label>
+                    <input type="password" class="input" name="password-to-delete" id="confirm-password-to-delete"
+                        required />
+                </div>
+                <input type="submit" id="delete-btn" style="margin-top: 10px;" value="Delete account" class="btn" />
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    CKEDITOR.replace('delete-reason');
+    function nextStep() {
+        var deleteReason = CKEDITOR.instances['delete-reason'].getData();
+        var nxtBtn = document.getElementById('nxt-btn');
+        var nxtContent = document.getElementById('nxt-steps');
+
+        if (deleteReason == '') {
+            nxtBtn.style.outline = 'none';
+            alert('Please describe your issue');
+        } else {
+            wordsLength = deleteReason.split(" ");
+            wordsLength = parseInt(wordsLength.length);
+            if (wordsLength > 50 && wordsLength < 150) {
+                nxtBtn.style.display = 'none';
+                nxtContent.style.display = 'block';
+            } else {
+                nxtBtn.style.outline = 'none';
+                alert('Describe your issue in 50 to 150 words')
+            }
+        }
+    }
+</script>
+{% endblock %}

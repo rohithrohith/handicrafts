@@ -1,0 +1,324 @@
+{% extends 'seller-layout.html' %}
+{% block title %}Handicrafts sellers | Orders {% endblock %}
+{% block body %}
+
+<head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .seller-orders-container-scroll {
+            overflow-x: scroll;
+        }
+
+        select {
+            cursor: default;
+            margin: 0em;
+            font: 400 13.3333px Arial;
+            border-radius: 0px;
+        }
+
+        option {
+            display: inline;
+            background: white !important;
+            color: black !important;
+        }
+
+        .orders {
+            margin-top: 5px;
+            width: 100%;
+        }
+
+        .footer-div {
+            overflow: hidden;
+        }
+
+        .column-head {
+            font-size: .8rem;
+            background-color: var(--themeColor);
+            color: white;
+            padding: 5px;
+            font-weight: normal;
+        }
+
+        .head-row,
+        .table-row {
+            display: grid;
+            text-align: left;
+            gap: 2px;
+            grid-template-columns: repeat(5, 1fr);
+        }
+
+        .table-row {
+            margin-top: 5px;
+            border-left: 2px solid var(--themeColor);
+            font-size: .8rem;
+        }
+
+
+        .table-column {
+            padding: 5px;
+            background: #eee;
+        }
+
+
+        .action {
+            margin: 1px 0;
+            padding: 2px;
+        }
+
+        .action-btn {
+            display: flex;
+            font-size: .8rem;
+            align-items: center;
+            cursor: pointer;
+            gap: 10px;
+            color: black;
+            padding: 3px;
+            border: none;
+            margin-bottom: 5px;
+            outline: none;
+            width: 100%;
+        }
+
+        .view-btn {
+            font-size: .8rem;
+            border: none;
+            padding: 0;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        @media(max-width: 530px) {
+            .orders {
+                width: 630px;
+            }
+        }
+    </style>
+</head>
+<div class="header">
+    <h1 class="lead"><i class="fas fa-box-open" style="margin-right: 10px;"></i>Orders</h1>
+    <div class="order-filter-div">
+        <div class="filter">
+            <form method="GET" id="filter-form">
+                <select name="filter" id="filter" class="filter">
+                    <option class="filter-option" selected>
+                        {% if filter %}
+                        <span style="text-transform: capitalize;">{{filter|safe}}</span>
+                        {% else %}
+                        Filter
+                        {% endif %}
+                    </option>
+                    <option class="filter-option" value="Not packed">Unpacked</option>
+                    <option class="filter-option" value="Packed">Packed</option>
+                    <option class="filter-option" value="Dispatched">Dispatched</option>
+                    <option class="filter-option" value="Delivered">Delivered</option>
+                    <option class="filter-option" value="Cancelled">Cancelled</option>
+                    {% if filter %}
+                    <option class="filter-option" value="Remove filter">Remove filter</option>
+                    {% endif %}
+                </select>
+            </form>
+        </div>
+    </div>
+
+</div>
+<div class="seller-orders-container-scroll">
+
+    {% if not order_data=='no orders' %}
+    <table class="orders">
+        <tr class="head-row">
+            <th class="column-head">Ordered details</th>
+            <th class="column-head">Product details</th>
+            <th class="column-head">Shipping details</th>
+            <th class="column-head">Current Status</th>
+            <th class="column-head">Actions</th>
+        </tr>
+        {% for order in order_data %}
+        <tr class="table-row">
+            <td class="table-column">
+                <div style="text-transform:capitalize; font-weight:700;">Order ID: {{order.order_id|safe}}</div>
+                <div>{{order.ordered_on|safe}}</div>
+            </td>
+            <td class="table-column">
+                <div class="img-div">
+                    <img src="/static/productImages/{{order.product_img|safe}}" width="100px" alt="" class="img">
+                </div>
+                <div style="text-transform:capitalize; font-weight:700;">{{order.product_name|safe}}</div>
+                <div>M.R.P: ₹ {{order.price|safe}}</div>
+            </td>
+            <td class="table-column">
+                <div style="text-transform:capitalize; white-space: pre-line;">{{order.address|safe}}</div>
+            </td>
+            <td class="table-column">
+                <div>
+                    {% if order.is_cancelled %}
+                    <span style="color: red; font-weight: bold;">{{order.current_status|safe}}</span>
+                    <div style="margin-top: 10px;">
+                        Cancelled on:
+                        <div>{{order.cancelled_on|safe}}</div>
+                    </div>
+                    {% else %}
+                    {% if order.current_status=='Product delivered' %}
+                    <span style="color: green; font-weight: bold;">{{order.current_status|safe}}</span>
+                    <div style="margin-top: 10px;">
+                        Delivered on: <div>{{order.delivered_on|safe}}</div>
+                    </div>
+                    {% else %}
+                    {{order.current_status|safe}}
+                    <div style="margin-top: 10px;">
+                        {% if order.current_status=='Dispatched' %}
+                        Dispatched on: <div>{{order.dispatched_on|safe}}</div>
+                        {% else %}
+                        {% if order.current_status=='unshipped' %}
+                        Ordered on: {{order.ordered_on|safe}}
+                        {% else %}
+                        Packed on: <div>{{order.packed_on|safe}}</div>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </td>
+            <td class="table-column">
+                {% if not order.is_cancelled %}
+                <div class="action">
+                    <form action="{{url_for('seller.getBill')}}" id="ge{{order.order_id|safe}}" method="POST">
+                        <input type="hidden" name="order-id" value="{{order.order_id|safe}}">
+                        {% if order.is_packed %}
+                        <a href="{{url_for('seller.downloadBill',name=order.order_id|safe)}}" target="_blank"
+                            class="action-btn"><i style="color: #e44141;" class="fas fa-receipt"></i>Open invoice
+                            copy</a>
+                        {% else %}
+                        <button class="action-btn" type="button" onclick="getBill('ge{{order.order_id|safe}}')">
+                            <i class="far fa-square" style="color: grey;"></i>Get bill
+                        </button>
+                        {% endif %}
+                    </form>
+                </div>
+                <div class="action">
+                    <form action="{{url_for('seller.orderDispatch')}}" id="di{{order.order_id|safe}}" method="POST">
+                        <input type="hidden" name="order-id" value="{{order.order_id|safe}}">
+                        {% if order.is_dispatched %}
+                        <button class="action-btn" type="button" onclick="alertMsg('Already dispatched!')">
+                            <i class="fas fa-check-square" style="color: green;"></i>Dispatch
+                        </button>
+                        {% else %}
+                        <button class="action-btn" type="button" onclick="dispatch('di{{order.order_id|safe}}')">
+                            <i class="far fa-square" style="color: grey;"></i>Dispatch
+                        </button>
+                        {% endif %}
+                    </form>
+                </div>
+                <div class="action">
+                    <form action="{{url_for('seller.orderDeliver')}}" id="de{{order.order_id|safe}}" method="POST">
+                        <input type="hidden" name="order-id" value="{{order.order_id|safe}}">
+                        {% if order.is_delivered %}
+                        <button class="action-btn" type="button" onclick="alertMsg('Already delivered!')">
+                            <i class="fas fa-check-square" style="color: green;"></i>Deliver
+                        </button>
+                        {% else %}
+                        <button class="action-btn" type="button" onclick="deliver('de{{order.order_id|safe}}')">
+                            <i class="far fa-square" style="color: grey;"></i>Deliver
+                        </button>
+                        {% endif %}
+                    </form>
+                </div>
+                {% endif %}
+                {% if not order.is_delivered %}
+                <div class="action">
+                    {% if order.cancel_request and not order.is_responsed %}
+                    <a href="{{url_for('seller.viewCancelRequest',id=order.canreq_id)}}"
+                        style="cursor: pointer; color: red;">View cancellation request
+                    </a>
+                    {% else %}
+                    {% if order.is_responsed and order.is_cancelled %}
+                    <i style="color: green;">Cancelled</i>
+                    {% else %}
+                    {% if order.is_responsed and not order.is_cancelled %}
+                    <span style="color: red;">Requested cancellation but rejected</span>
+                    {% else %}
+                    No cancellation request
+                    {% endif %}
+                    {% endif %}
+
+                    {% endif %}
+                </div>
+                {% endif %}
+            </td>
+        </tr>
+        {%endfor%}
+    </table>
+    {% else %}
+    <div class="no-order" style="margin-top: 20px; border: lightgrey 2px solid; border-radius: 5px; padding: 10px;">
+        {% if not filter == 'Remove filter' or not filter %}
+        <h3>No orders in {{filter|safe}} filter!</h3>
+        <a href="{{url_for('seller.sellerDashboard',businessname=session.seller_name|safe)}}" style="margin-top: 10px;"
+            class="btn">Back to dashboard</a>
+        {% else %}
+        <h3>You have no orders, wait for them!</h3>
+        <a href="{{url_for('seller.sellerDashboard',businessname=session.seller_name|safe)}}" style="margin-top: 10px;"
+            class="btn">Back to dashboard</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+</div>
+{% block script %}
+<script>
+    document.getElementById('filter').addEventListener('change', (e) => {
+        if (e.target.value == '') {
+            return
+        }
+        else {
+            document.getElementById('filter-form').submit();
+        }
+    });
+    document.getElementById('sort').addEventListener('change', (e) => {
+        if (e.target.value == '') {
+            return
+        }
+        else {
+            document.getElementById('sort-form').submit();
+        }
+    });
+
+    function getBill(id) {
+        if (confirm('Is the product packed?')) {
+            console.log(id);
+            document.getElementById(id).submit();
+        }
+    }
+
+    function dispatch(id) {
+        if (confirm('Is the product dispatched?')) {
+            console.log(id);
+            document.getElementById(id).submit();
+        }
+    }
+
+    function deliver(id) {
+        if (confirm('Is the product delivered?')) {
+            console.log(id);
+            document.getElementById(id).submit();
+        }
+    }
+
+    function alertMsg(msg) {
+        alert(msg);
+    }
+
+</script>
+{% endblock %}
+{% endblock %}

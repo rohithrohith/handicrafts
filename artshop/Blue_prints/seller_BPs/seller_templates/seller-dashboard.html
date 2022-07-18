@@ -1,0 +1,336 @@
+{% extends 'seller-layout.html' %}
+
+<head>
+	{% block title %}Handicrafts sellers | Dashboard{% endblock %}
+	{% block style %}
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			overflow-x: hidden;
+		}
+
+		.seller-dashboard-head {
+			text-transform: capitalize;
+			position: relative;
+			display: inline;
+		}
+
+		.order-tag {
+			font-size: .8rem;
+			top: 0;
+			right: -80px;
+			padding: 3px;
+			color: white;
+			width: fit-content;
+			background: var(--themeColor);
+			border-radius: 5px;
+			position: absolute;
+			animation-name: shake;
+			animation-duration: .4s;
+			animation-iteration-count: infinite;
+			animation-timing-function: linear;
+		}
+
+		.order-tag a {
+			color: white;
+		}
+
+		@keyframes shake {
+			0% {
+				transform: rotate(0deg);
+			}
+
+			25% {
+				transform: rotate(3deg);
+
+			}
+
+			50% {
+				transform: rotate(0deg);
+
+			}
+
+			75% {
+				transform: rotate(-3deg);
+
+			}
+
+			100% {
+				transform: rotate(0deg);
+
+			}
+		}
+
+		.seller-info-section {
+			overflow: scroll;
+		}
+
+		.products-table {
+			overflow: scroll;
+			border-bottom: 2px lightgrey solid;
+			width: 100%;
+		}
+
+		tr {
+			background: #eee;
+		}
+
+		tr:nth-child(even) {
+			background: white;
+		}
+
+		.your-products {
+			color: var(--themeColor);
+			margin-top: 10px;
+			display: flex;
+			align-items: center;
+		}
+
+		.table-heads {
+			text-align: left;
+			background: var(--themeColor);
+			color: white;
+			font-weight: normal;
+			display: flex;
+			align-items: center;
+			height: 30px;
+			font-size: .9rem;
+			padding: 0 5px;
+		}
+
+		.table-columns:nth-child(6) {
+			width: 100%;
+			background: white;
+			display: flex;
+			justify-content: center;
+		}
+
+		.table-head-row {
+			display: grid;
+			margin-bottom: 5px;
+			grid-gap: 2px;
+			grid-template-columns: repeat(6, 1fr);
+			align-items: center;
+			justify-content: center;
+		}
+
+		.table-row {
+			display: grid;
+			grid-template-columns: repeat(6, 1fr);
+			margin-bottom: 1px;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.table-columns {
+			display: flex;
+			align-items: center;
+			padding: 2px 5px;
+			font-size: .8rem;
+			height: 100%;
+		}
+
+		.delete {
+			color: var(--themeColor);
+			display: block;
+			background: white;
+			font-size: .8rem;
+			width: 100%;
+			border: var(--themeColor) 1px solid;
+			padding: 0 5px;
+			text-align: center;
+			cursor: pointer;
+			transition: background .1s ease-in-out;
+		}
+
+		.delete:hover {
+			border-width: 2px;
+			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+		}
+
+		.add-product {
+			margin-top: 10px;
+		}
+
+		.top-stat-container {
+			display: flex;
+			margin-top: 10px;
+			gap: 10px;
+		}
+
+		.stat-box {
+			padding: 10px;
+			width: 50%;
+			height: fit-content;
+			background: #eee;
+		}
+
+		.box-head {
+			font-weight: normal;
+			font-size: 1rem;
+		}
+
+		.box-content {
+			font-size: 2.1rem;
+			padding: 10px 0;
+			width: 100%;
+			color: #666;
+			font-weight: bolder;
+			height: 100%;
+		}
+
+		#monthly-you-get,
+		#total-you-get {
+			font-size: .8rem;
+			padding: 10px 0;
+		}
+
+		@media(max-width:750px) {
+			.stat-table {
+				width: 80%;
+			}
+		}
+
+		@media(max-width: 500px) {
+			.products-table {
+				width: 500px;
+			}
+		}
+
+		@media(max-width: 400px) {
+			.seller-dashboard-head {
+				font-size: 1.4rem;
+			}
+
+			.stat-box {
+				height: 100px;
+			}
+
+			.box-head {
+				font-size: .7rem;
+			}
+
+			.box-content {
+				font-size: 1.3rem;
+			}
+
+			#total-you-get,
+			#monthly-you-get {
+				font-size: .7rem;
+			}
+		}
+
+		@media(max-width:320px) {
+			.lead {
+				font-size: 1rem;
+			}
+
+			small {
+				font-size: 10px !important;
+			}
+
+			.seller-dashboard-head {
+				font-size: 1.2rem;
+			}
+		}
+	</style>
+	{% endblock %}
+</head>
+{% block body %}
+<h1 class="seller-dashboard-head">Welcome {{businessname | safe}}
+	{% if n_orders %}
+	<div class="order-tag"><a href="{{url_for('seller.sellerOrders',businessname=session.seller_name)}}"
+			class="new-order-tag">New orders!</a></div>
+	{% endif %}
+</h1>
+<h1 class="lead"><i class="fab fa-product-hunt" style="margin-right: 10px;"></i>Your products</h1>
+<small style="font-size: .9rem; margin: 5px 0; display: inline-block;">Click on product to edit them</small>
+<section class="seller-info-section">
+	{% if not data == 0 %}
+	<table class="products-table">
+		<tr class="table-head-row">
+			<th class="table-heads">Name</th>
+			<th class="table-heads">Type</th>
+			<th class="table-heads">Quantity</th>
+			<th class="table-heads">Price</th>
+			<th class="table-heads">Description</th>
+			<th class="table-heads">Action</th>
+		</tr>
+		{% for product in data %}
+		<div>
+			<tr class="table-row">
+				<td class="table-columns" style="border-left: var(--themeColor) solid 2px; font-weight: 700;">
+					<a href="/seller.handicrafts/edit/product/{{product.product_id}}"
+						class="product-link">{{product.product_name | safe}}</a>
+				</td>
+
+				<td class="table-columns">{{product.product_type | safe}}</td>
+				<td class="table-columns">
+					{% if product.product_quantity_left|safe=='0' %}
+					<b style="color: red;">NILL</b>
+					{% else %}
+					{{product.product_quantity_left | safe}}
+					{% endif %}
+				</td>
+				<td class="table-columns">{{product.price | safe}}</td>
+				<td class="table-columns">{{product.product_desc[0:20] | safe}}..</td>
+				<td class="table-columns">
+					<form action="/seller.handicrafts/{{session.seller_name|safe}}/delete/product" style="width: 100%;">
+						<input type="hidden" name="product-id" value="{{product.product_id|safe}}" />
+						<input class="delete" type="submit" value="Delete" />
+					</form>
+				</td>
+			</tr>
+		</div>
+		{% endfor %}
+		{% else %}
+		<h3>No products added yet, start adding now!</h3>
+		{% endif %}
+	</table>
+
+</section>
+
+<div class="add-product">
+	<a href="/seller.handicrafts/addproduct" style="margin: 10px 0;" class="btn">Add product</a>
+</div>
+<hr style="margin-top: 10px;">
+<section class="stats-section">
+	<h1 class="lead" style="margin-top: 10px;">
+		<i class="fas fa-chart-line" style="margin-right: 10px;"></i>
+		<span>Your stats</span>
+	</h1>
+	{% if not data == 0 %}
+	<div class="top-stat-container">
+		<div class="stat-box">
+			<h2 class="box-head"><b>Monthly worth sold</b></h2>
+			<div class="box-content">
+				<span id="monthly-earning">₹ {{mr|safe}}</span>
+				<div id="monthly-you-get" style="display: flex; align-items: center; gap: 3px; cursor: pointer;"></div>
+			</div>
+		</div>
+		<div class="stat-box">
+			<h2 class="box-head"><b>Total worth sold</b></h2>
+			<div class="box-content">
+				<div id="total-earning">₹ {{earnings|safe}}</div>
+				<div id="total-you-get" style="display: flex; align-items: center; gap: 3px; cursor: pointer;"></div>
+			</div>
+		</div>
+	</div>
+	<div class="graph-chart" id="stat-graph">
+
+	</div>
+	{% else %}
+	<h3>No stats</h3>
+	{% endif %}
+</section>
+<script>
+	var MW = '{{mr|safe}}';
+	var TW = '{{earnings|safe}}';
+	MW = Math.ceil(parseFloat(MW) - (parseFloat(MW) * .06));
+	TW = Math.ceil(parseFloat(TW) - (parseFloat(TW) * .06));
+	document.getElementById('monthly-you-get').innerHTML = 'You get: ₹ ' + MW + '.00 <i class="fas fa-info-circle have-title"> <span class="title">6% commission</span> </i>';
+	document.getElementById('total-you-get').innerHTML = 'You get: ₹ ' + TW + '.00 <i class="fas fa-info-circle have-title"> <span class="title">6% commission</span> </i>';
+</script>
+{% endblock %}

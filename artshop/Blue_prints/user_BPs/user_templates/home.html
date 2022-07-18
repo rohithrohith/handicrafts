@@ -1,0 +1,186 @@
+{% extends 'layout.html' %}{% block body %}
+
+<head>
+	<title>Handicrafts</title>
+	<style>
+		.section-head {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 5px;
+		}
+
+		.nodata {
+			padding: 20px;
+			text-align: center;
+			font-size: 2rem;
+			background: #eee;
+		}
+
+		.all-products-link {
+			color: var(--themeColor);
+
+		}
+
+		.lighting-section {
+			margin-top: 10px;
+		}
+
+		.products {
+			display: grid;
+			gap: 10px;
+			grid-template-columns: 1fr 1fr;
+		}
+
+		.product-img {
+			height: 100%;
+			width: 100%;
+		}
+
+		.product {
+			height: 340px;
+			padding: 5px;
+			border: 1.5px solid #ccc;
+			background: white;
+			border-radius: 5px;
+			display: grid;
+			grid-template-rows: 100% 0;
+		}
+
+		.product-rows {
+			display: grid;
+			grid-template-rows: 60% 40%;
+		}
+
+		.product-info {
+			padding-left: 5px;
+			width: auto;
+			display: flex;
+			text-transform: capitalize;
+			flex-direction: column;
+			justify-content: space-around;
+			background: white;
+			color: black;
+			font-size: .9rem;
+		}
+
+		.price,
+		.name {
+			font-size: 1rem;
+			font-weight: bold;
+		}
+
+		.seller {
+			font-size: 0.8rem;
+		}
+
+		.desc {
+			display: none;
+		}
+
+		.type {
+			font-weight: 300;
+			font-style: italic;
+		}
+
+		@media (max-width:340px) {
+			.products {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		@media(min-width: 1024px) {
+			.products {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+			}
+
+			.product {
+				display: grid;
+				height: 200px;
+				width: 100%;
+				grid-template-columns: 100%;
+			}
+
+			.product-img {
+				width: 100%;
+			}
+
+			.product-rows {
+				display: flex;
+				width: 100%;
+			}
+
+			.product-info {
+				margin-left: 5px;
+				width: 100%;
+			}
+
+			.prod-img-div {
+				width: 60%;
+			}
+
+			.desc {
+				display: block;
+				font-size: .8rem;
+				font-weight: normal;
+			}
+		}
+	</style>
+</head>
+
+<section class="discount-section">
+	{% if not products=='no data' %}
+	<div class="section-head">
+		<h1 class="lead">Top products</h1>
+		<div class="all-products">
+			<a href="/products?keyword=all&sort=False" class="all-products-link">All products</a>
+		</div>
+	</div>
+
+	<div class="products">
+		{% for product in products %}
+		<div class="product" onclick="loading()">
+			<a href="/view/product/{{product.product_id|safe}}" class="product-rows">
+				<div style="overflow: hidden;" class="prod-img-div">
+					<img src="/static/productImages/{{product.product_img|safe}}" alt="product" class="product-img" />
+				</div>
+				<div class="product-info">
+					<div class="name">
+						{{product.product_name|safe}}
+					</div>
+					<div class="type" style="font-weight: none;">
+						{{product.product_type|safe}}
+					</div>
+					<div class="price">M.R.P: ₹ {{product.price|safe}}</div>
+					<div class="status">
+						{% if not product.product_quantity_left == 0 %}
+						<small style="color: green;">Product is available</small>
+						{% else %}
+						<small style="color: red;">Product is unavailable</small>
+						{% endif %}
+					</div>
+					<div class="rating"><i class="fas fa-star" style="color: gold;"></i> {{product.rating|safe}}
+						({{product.number_of_raters}})</div>
+					<div class="desc">
+						{{product.product_desc[:70]|safe}}
+					</div>
+					<div class="seller">Sold by <i>{{product.seller|safe}}</i></div>
+				</div>
+			</a>
+		</div>
+		{% endfor %}
+	</div>
+	{% else %}
+	<div class="nodata">
+		<p>Oops! no products</p>
+	</div>
+	{% endif %}
+</section>
+<script>
+	function getRatings(ratings, number) {
+		av = parseInt(ratings) / parseInt(number);
+		document.getElementById('rating').innerHTML = "Ratings!";
+	}
+</script>
+{% endblock %}

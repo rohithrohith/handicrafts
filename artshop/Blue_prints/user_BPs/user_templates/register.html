@@ -1,0 +1,55 @@
+{% extends 'layout.html' %} {% block body %}
+
+<head>
+	<title>Handicrafts | Register</title>
+	<style>
+		.signup-form {
+			border: lightgrey solid 2px;
+			margin-top: 10px;
+			overflow: hidden;
+			padding: 10px;
+			border-radius: 5px;
+		}
+
+		.form-div {
+			padding: 0 10px;
+		}
+
+		@media(min-width:1024px) {
+			.form-div {
+				width: 50%;
+			}
+		}
+	</style>
+</head>
+<div class="form-div">
+	<form class="signup-form" method="POST" onsubmit="loading()">
+		<h1 style="margin-bottom: 15px;" class="lead">Register now</h1>
+		<div class="form-data">
+			<input class="input" placeholder=" " type="text" name="signup-name" id="name"
+				style="text-transform: capitalize;" required />
+			<label for="name"><span class="span">Enter your name</span></label>
+		</div>
+		<div class="form-data">
+			<input class="input" placeholder=" " type="email" name="signup-email" id="email" required />
+			<label for="email">
+				<span class="span" id="email-span">Enter your E-mail</span>
+			</label>
+		</div>
+		<div class="form-data">
+			<input class="input" placeholder=" " type="password" name="signup-password" id="password" required />
+			<label for="password"><span class="span">Enter your password</span></label>
+		</div>
+		<div class="form-data">
+			<input class="input" placeholder=" " type="password" name="signup-confirm-password" id="cpassword"
+				required />
+			<label for="cpassword"><span class="span">Re-enter your password</span></label>
+		</div>
+		<div class="form-data">
+			<input type="submit" value="Register" class="btn" style="margin: 10px 0;" />
+		</div>
+		<a href="/signin" class="assistance-link">Already have an account? sign in here</a>
+	</form>
+</div>
+
+{% endblock %}

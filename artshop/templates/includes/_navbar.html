@@ -1,0 +1,245 @@
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', sans-serif;
+            box-sizing: border-box;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .navbar {
+            background: white;
+            position: fixed;
+            box-shadow: 0 2px white;
+            z-index: 2;
+            width: 100%;
+            background-position: center;
+            padding: 10px;
+            border-bottom: var(--themeColor) 1.5px solid;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-menu {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .burger-menu {
+            height: 25px;
+            cursor: pointer;
+            width: 40px;
+        }
+
+
+        .signinup {
+            margin-right: 10px;
+            padding: 5px;
+            text-align: center;
+            font-size: .8rem;
+            color: var(--themeColor);
+            border: var(--themeColor) 1px solid;
+        }
+
+        .brand {
+            width: 80%;
+            display: flex;
+        }
+
+        .search {
+            width: 100%;
+            background: white;
+            margin-top: 5px;
+        }
+
+        .search-form {
+            display: flex;
+            border-bottom: var(--themeColor) 1px solid;
+            justify-items: center;
+        }
+
+        .searchbar {
+            width: 100%;
+            height: 35px;
+            border: none;
+            padding-left: 5px;
+            outline: none;
+        }
+
+        .search-btn {
+            border: none;
+            border-radius: 0 5px 5px 0;
+            padding: 0 10px 0 10px;
+            background-color: white;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .search-icon {
+            color: black;
+            width: 100%;
+            display: flex;
+            font-size: 0.9rem;
+            justify-items: center;
+        }
+
+        .close {
+            overflow: hidden;
+            padding: 5px;
+            position: absolute;
+            right: 10px;
+            text-align: right;
+            transition: transform .5s ease-in-out;
+        }
+
+        .close img {
+            cursor: pointer;
+            transform: scale(.7);
+        }
+
+
+        .slide-nav {
+            position: fixed;
+            width: 0;
+            background: white;
+            z-index: 3;
+            text-align: left;
+            padding: 20px;
+            height: 100%;
+            margin-left: -300px;
+            top: 0;
+            transition: all .5s ease-in-out;
+        }
+
+        .nav-list {
+            position: absolute;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .nav-item {
+            margin: 20px 0 20px 0;
+        }
+
+        .nav-link {
+            color: black;
+            font-size: 1.2rem;
+        }
+
+        .nav-link:hover {
+            color: var(--themeColor);
+        }
+
+        @media(min-width: 750px) {
+            .navbar {
+                padding: 10px 150px 10px 150px;
+            }
+        }
+
+        @media(min-width: 1024px) {
+            .navbar {
+                padding: 10px 180px 10px 180px;
+            }
+        }
+    </style>
+</head>
+
+<div class="slide-nav" id="slide-nav">
+    <div class="close" title="Close nav">
+        <img src="{{url_for('static',filename='Close1.png')}}" alt="" id="close">
+    </div>
+    <ul class="nav-list" id="nav-list">
+        <li class="nav-item"><a href="{{url_for('user.home')}}" class="nav-link">Home</a></li>
+        {% if session.logged_in %}
+        <li class="nav-item">
+            <a href="{{url_for('user.userAccount',user=session.name|safe)}}" class="nav-link">My account</a>
+        </li>
+        <li class="nav-item">
+            <a href="{{url_for('user.yourOrders',user=session.name|safe)}}" class="nav-link">Orders</a>
+        </li>
+        {% endif %}
+        <li class="nav-item">
+            <a href="/seller.handicrafts" class="nav-link">Sell on Handicrafts</a>
+        </li>
+        {% if session.logged_in %}
+        <li class="nav-item"><a href="{{url_for('user.logout')}}" class="nav-link">Log out</a></li>
+        {% else %}
+        <li class="nav-item"><a href="{{url_for('user.signin')}}" class="nav-link">Sign in</a></li>
+        <li class="nav-item"><a href="{{url_for('user.register')}}" class="nav-link">Sign up</a></li>
+        {% endif %}
+    </ul>
+</div>
+<nav class="navbar" id="navbar">
+
+    <div class="main-nav">
+        <div class="nav-left">
+            <a onclick="loading()" href="/home" class="brand">
+                <img src="{{url_for('static', filename='HandicraftsLogo1.png')}}" alt="" class="brand-img" />
+            </a>
+        </div>
+        <div class="nav-right">
+            {% if session.logged_in %}
+            <div class="nav-menu">
+                <a href="{{url_for('user.userAccount',user=session.name|safe)}}" class="signinup">Hi,
+                    {{session.name | safe}}</a>
+                <img src="{{url_for('static', filename='menuIcon.png')}}" alt="menu" title="Menu" class="burger-menu"
+                    id="menu" />
+            </div>
+            {% else %}
+            <div class="nav-menu">
+                <a href="/signin" class="signinup">Sign In</a>
+                <img src="{{url_for('static', filename='menuIcon.png')}}" alt="menu" class="burger-menu" title="Menu"
+                    id="menu" />
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="search">
+        <form class="search-form" method="GET" onsubmit="loading()" action="/products">
+            <input type="search" name="keyword" id="searchbar" placeholder="Search by product type" class="searchbar"
+                required />
+            <input type="text" name="sort" value="False" hidden />
+            <button type="submit" class="search-btn">
+                <i class="fas fa-search search-icon"></i>
+            </button>
+        </form>
+    </div>
+</nav>
+<script type="text/javascript">
+    var menu = document.getElementById('menu');
+    var slideNav = document.getElementById('slide-nav');
+    var Close = document.getElementById('close');
+    menu.addEventListener('click', () => {
+        slideNav.style.width = '300px';
+        document.getElementById('body').style.marginLeft = '300px';
+        document.getElementById('footer').style.marginLeft = '300px';
+        document.getElementById('container').style.marginRight = '-300px';
+        document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.4)';
+    });
+
+    Close.addEventListener('click', () => {
+        document.getElementById('body').style.marginLeft = '0';
+        document.getElementById('footer').style.marginLeft = '0';
+        document.getElementById('container').style.marginRight = '0';
+        slideNav.style.width = '0';
+        document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
+    });
+</script>

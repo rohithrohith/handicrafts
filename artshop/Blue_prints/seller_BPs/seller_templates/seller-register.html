@@ -1,0 +1,105 @@
+{% extends 'seller-layout.html' %}
+{% block title %}Handicrafts sellers | Register {% endblock %}
+{% block body %}
+
+<head>
+	<style>
+		.info-section {
+			margin-top: 10px;
+		}
+
+
+
+		ol {
+			margin-left: 30px;
+			display: block;
+		}
+
+
+
+		.seller-register-form {
+			margin-top: 20px;
+		}
+
+		.tandc-checkbox {
+			margin-top: 30px;
+			width: 12px;
+			height: 12px;
+		}
+
+		.tandc {
+			font-size: .9rem;
+		}
+
+		.tandc-link {
+			font-size: .9rem;
+			color: blue;
+		}
+
+		.step1-btn {
+			height: fit-content;
+			font-size: 1rem;
+			padding: 5px 10px;
+			margin-top: 10px;
+			background: var(--themeColor);
+			width: fit-content;
+			color: white;
+			border: var(--themeColor) 1px solid;
+		}
+
+		.step1-btn:hover {
+			color: var(--themeColor);
+			background: none;
+			border: var(--themeColor) 1px solid;
+		}
+
+		@media(min-width:1024px) {
+			.seller-register-form {
+				width: 50%;
+			}
+		}
+	</style>
+</head>
+<section class="info-section">
+	<div class="">
+		<h1 class="lead"><i class="fas fa-user-plus" style="margin-right: 10px;"></i>Start selling by registering</h1>
+	</div>
+	<h2 style="margin-top: 10px;">Pre requisites</h2>
+	<ol>
+		<li>Your bank details</li>
+		<li>Tax details of your business</li>
+	</ol>
+</section>
+<form class="seller-register-form" method="POST">
+	<div class="form-data">
+		<label for="business-name">Business name<small>(Enter business name as regestered in PAN)</small></label>
+
+		<input class="input" type="text" style="text-transform: capitalize;" name="business-name" id="business-name"
+			placeholder="Business" required />
+	</div>
+	<div class="form-data">
+		<label for="business-email">Business E-mail</label>
+		<input class="input" type="email" name="business-email" id="business-email" placeholder="Business-email"
+			required />
+	</div>
+	<div class="form-data">
+		<label for="business-password">Password</label>
+		<input class="input" type="password" name="business-password" id="business-password"
+			placeholder="Enter password" required />
+	</div>
+	<div class="form-data">
+		<label for="business-c-password">Password</label>
+		<input class="input" type="password" name="business-c-password" id="business-c-password"
+			placeholder="Confirm password" required />
+	</div>
+
+	<input class="tandc-checkbox" style="outline: none;" type="checkbox" name="accept-terms-and-condition"
+		id="terms-and-condition" required />
+	<span class="tandc">I have read and agree to</span>
+	<a href="/seller.handicrafts/help/tandc" class="tandc-link">
+		handicrafts seller Terms and conditions</a>
+	<div class="form-data">
+		<input type="submit" value="Continue" style="margin-top: 10px;" class="btn">
+	</div>
+</form>
+{% endblock %}

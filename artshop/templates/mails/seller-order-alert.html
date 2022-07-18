@@ -1,0 +1,75 @@
+{% extends 'mail-layout.html' %}
+{% block body %}
+
+<head>
+    <style>
+        .info {
+            width: 100%;
+        }
+
+        .product-info-div {
+            margin-top: 10px;
+            padding: 10px;
+        }
+
+        .prod-img-div {
+            height: 150px;
+            width: 150px;
+        }
+
+        .prod-img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .prod-info {
+            margin-right: 10px;
+            margin-top: 10px;
+            font-size: .8rem;
+        }
+
+        .user-info {
+            font-size: small;
+            vertical-align: middle;
+            padding: 10px;
+        }
+
+        @media(min-width:750px) {
+            .info {
+                width: 50%;
+            }
+        }
+    </style>
+</head>
+
+<h1>Hello, <span style="text-transform: capitalize; color: #e44141;">{{mail_data.seller_name|safe}}</span></h1>
+<p>You have got new order to work on!</p>
+<h1 style="color: #e44141; margin: 10px 0;">Order details</h1>
+<table class="info">
+    <div class="product-info-div">
+        <div class="prod">
+            <div class="prod-img-div">
+                <img src="https://gracious-tesla-35e8db.netlify.app/productImages/{{mail_data.product_img|safe}}"
+                    width="200px" alt="" class="prod-img">
+            </div>
+            <div class="prod-info">
+                <div class="name">Order ID: <b>{{mail_data.order_id|safe}}</b></div>
+                <div class="name">{{mail_data.product_name|safe}}</div>
+                <div class="type">{{mail_data.product_type|safe}}</div>
+                <div class="price">M.R.P: ₹ {{mail_data.price|safe}} Rs</div>
+                <div class="on">ordered on: {{mail_data.ordered_on}}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="user-info">
+        <b style="display: block; font-size: medium;">Shipment address</b>
+        <div>{{mail_data.address|safe}}</div>
+        <div>E-mail: {{mail_data.email|safe}}</div>
+    </div>
+</table>
+<div style="margin:10px; font-size: 13px;">
+    <div>Thank you</div>
+    <div>Team Handicrafts sellers</div>
+</div>
+{% endblock %}

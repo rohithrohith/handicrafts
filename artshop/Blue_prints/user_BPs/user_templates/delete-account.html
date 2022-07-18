@@ -1,0 +1,143 @@
+{% extends 'layout.html' %}{% block body %}
+
+<head>
+	<title>Handicrafts | Delete account</title>
+	<style>
+		.delete-acc-container {
+			margin: 10px;
+			border: lightgrey solid 1.5px;
+			border-radius: 5px;
+			padding: 10px;
+		}
+
+		select:focus {
+			outline: none;
+		}
+
+		#delete-reason {
+			outline: none;
+			width: 100%;
+		}
+
+		.delete-reson-option {
+			outline: none;
+		}
+
+		.input {
+			display: block;
+			margin-bottom: 10px;
+			width: 100%;
+			outline: none;
+			height: 30px;
+		}
+
+		.nxt-btn {
+			background: var(--themeColor);
+			color: white;
+			padding: 5px 10px;
+			font-size: 1rem;
+			border: var(--themeColor) 1px solid;
+			display: block;
+			width: fit-content;
+			height: fit-content;
+			cursor: pointer;
+			opacity: .7;
+		}
+
+		#nxt-steps {
+			display: none;
+		}
+	</style>
+</head>
+<h2 class="lead" style="margin-left: 10px;">Delete your account</h2>
+<div class="delete-acc-container">
+	<p style="font-size: 1rem;">
+		Once your account is closed, it is no longer accessible by you or anyone
+		else; you won't be able to access your order history or print a proof of
+		purchase or an invoice.
+	</p>
+	<div class="delete-info" style="margin-top: 10px;;">
+		<b style="font-size: 1.1rem">If you delete, you won't have access to:</b>
+		<ol style="margin-left: 10px; font-size: 1.rem; list-style: decimal;">
+			<li class="detail">Your account history.</li>
+			<li class="detail">Your wishlist, orders, addresses.</li>
+			<li class="detail">Any details of your's on this site.</li>
+		</ol>
+	</div>
+	<div class="delete-form-div" style="margin-top: 10px;">
+		<form onsubmit="loading()" action="" class="delete-form" method="POST">
+			<div class="form-data">
+				<span for="select-reason">Select reason for closing account</span>
+				<select name="select-reason" id="select-reason" style="margin-top: 10px; height: 35px;">
+					<option value="" selected disabled>Select</option>
+					<option value="I have an another account at Handicrafts">I have an another account at Handicrafts
+					</option>
+					<option value="I am changing my E-mail">I am changing my E-mail
+					</option>
+					<option value="Others">Others
+					</option>
+				</select>
+			</div>
+			<div class="form-data" id="other-desc" style="display: none;">
+				<span class="span" style="font-weight: bold;">Tell us why you wish to delete your account</span>
+				<textarea name="delete-reason" id="delete-reason" cols="30" rows="5" maxlength="150"
+					style="margin-top: 5px; padding: 5px;"></textarea>
+			</div>
+			<button type="button" disabled class="nxt-btn" style="margin-top: -5px;" id="nxt-btn">
+				Next
+			</button>
+			<div id="nxt-steps">
+				<div class="form-data" style="margin-top: 10px;">
+					<label for="confirm-password-to-delete">Enter your password</label>
+					<input type="password" class="input" name="password-to-delete" id="confirm-password-to-delete"
+						required />
+				</div>
+				<input type="submit" id="delete-btn" value="Delete account" style="margin-top: 10px;" class="btn" />
+			</div>
+		</form>
+	</div>
+</div>
+<script>
+	CKEDITOR.replace('delete-reason');
+	var selectReason = document.getElementById('select-reason');
+	var nxtBtn = document.getElementById('nxt-btn');
+	var nxtContent = document.getElementById('nxt-steps');
+	selectReason.addEventListener('input', (e) => {
+		nxtContent.style.display = 'none';
+		nxtBtn.style.display = 'block';
+		var reason = e.target.value;
+		if (reason == 'Others') {
+			nxtBtn.disabled = false;
+			nxtBtn.style.opacity = '1';
+			document.getElementById('other-desc').style.display = 'block';
+		}
+		else {
+			document.getElementById('other-desc').style.display = 'none';
+			nxtBtn.style.opacity = '1';
+			nxtBtn.disabled = false;
+		}
+	});
+	nxtBtn.addEventListener('click', (e) => {
+		var reason = selectReason.value;
+		if (reason == 'Others') {
+			var deleteReason = CKEDITOR.instances['delete-reason'].getData();
+			if (deleteReason != '') {
+				var deleteReasonWordsCount = String(deleteReason).split(" ");
+				var deleteReasonWordsCount = deleteReasonWordsCount.length;
+				if (deleteReasonWordsCount > 20 && deleteReasonWordsCount < 150) {
+					alert('Not others')
+					nxtContent.style.display = 'block';
+					nxtBtn.style.display = 'none';
+				} else {
+					alert('Describe the reason in 20 to 150 words')
+				}
+			} else {
+				alert('Please describe your reason for account deletion')
+			}
+		} else {
+			nxtContent.style.display = 'block';
+			nxtBtn.style.display = 'none';
+		}
+	});
+</script>
+{% endblock %}

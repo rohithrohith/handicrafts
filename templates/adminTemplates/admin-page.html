@@ -1,0 +1,117 @@
+{% extends '/adminTemplates/admin-layout.html' %}
+{% block body %}
+
+<head>
+    <style>
+        .no-data {
+            padding: 20px;
+            margin-top: 10px;
+            border: 2px solid lightgrey;
+            border-radius: 5px;
+        }
+
+        a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .logout-btn {
+            padding: 5px 10px;
+            display: block;
+            width: fit-content;
+            border: black 1px solid;
+            margin-top: 10px;
+            transition: .2s ease-in-out;
+        }
+
+        .logout-btn:hover {
+            background: black;
+            color: white;
+        }
+
+        .page-head {
+            margin: 10px 0;
+        }
+
+        .table {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .table .head {
+            padding: 10px;
+            background: #111;
+            color: white;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .table .rows {
+            background: #eee;
+            margin-top: 4px;
+            padding: 10px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .cell {
+            display: table-cell;
+            vertical-align: middle;
+            padding: 0 2px;
+        }
+
+        .handle-req-btn {
+            border: none;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<h1 class="lead">Hello <span style="text-transform: capitalize;">{{session.hc_admin_name|safe}}</span></h1>
+<div class="new-seller-verification">
+    <div class="seller-box">
+        {% if v_data == 'no data' %}
+        <div class="no-data">
+            <h2 style="font-weight: normal;">No work here! check whether any work in pending up there..</h2>
+            <a href="{{url_for('adminLogout')}}" class="logout-btn" style="margin-top: 10px;">Log out</a>
+        </div>
+        {% else %}
+        <div class="seller">
+            <div class="page-head">
+                <h3>New verification request!</h3>
+            </div>
+            <div class="content">
+                <div class="table">
+                    <div class="head">
+                        <div class="heads">Seller ID</div>
+                        <div class="heads">Proof type</div>
+                        <div class="heads">View</div>
+                    </div>
+                    {% for data in v_data %}
+                    <div class="rows">
+                        <div class="cell">{{data.seller_id|safe}}</div>
+                        <div class="cell">{{data.proof_type|safe}}</div>
+                        <div class="cell">
+                            {% if data.is_handled %}
+                            Handeled by <b>{{data.handled_by|safe}}</b> <a
+                                href="{{url_for('viewIdentityProofs',id=data.seller_id|safe)}}"
+                                style="text-decoration: underline;">(view proofs)</a>
+                            {% else %}
+                            <form action="{{url_for('handleVerificationRequest')}}" method="POST" class="handle-form">
+                                <input type="hidden" name="seller-id" value="{{data.seller_id|safe}}">
+                                <input type="hidden" name="admin-id" value="{{session.hc_admin_id|safe}}">
+                                <input type="submit" value="Handle request" class="handle-req-btn">
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

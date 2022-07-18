@@ -1,0 +1,89 @@
+{% extends 'mail-layout.html' %}
+{% block body %}
+
+<head>
+    <style>
+        .info {
+            width: 100%;
+        }
+
+        .product-info-div {
+            margin-top: 10px;
+            padding: 10px;
+        }
+
+        .prod-img-div {
+            height: 150px;
+            width: 150px;
+        }
+
+        .prod-img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .prod-info {
+            margin-right: 10px;
+            margin-top: 10px;
+            font-size: .8rem;
+        }
+
+        .user-info,
+        .seller-info {
+            font-size: small;
+            vertical-align: top;
+            padding: 10px;
+        }
+
+        .new-row {
+            display: table-cell;
+        }
+    </style>
+</head>
+
+<h1>Hello, <span style="text-transform: capitalize; color: #e44141;">{{mail_data.name|safe}}</span></h1>
+<p>Your new order '<b>{{mail_data.product_name|safe}}</b>', <i>{{mail_data.product_type|safe}}</i> has been placed and
+    you can find order details and shipment details below.</p>
+<h1 style="color: #e44141; margin: 10px 0;">Order details</h1>
+<table class="info">
+    <tr class="table-row">
+        <td class="product-info-div">
+            <div class="prod">
+                <div class="prod-img-div">
+                    <img src="https://gracious-tesla-35e8db.netlify.app/productImages/{{mail_data.product_img|safe}}"
+                        width="200px" alt="" class="prod-img">
+                </div>
+                <div class="prod-info">
+                    <div class="name">Order ID: <b>{{mail_data.order_id|safe}}</b></div>
+                    <div class="name"><b>{{mail_data.product_name|safe}}</b></div>
+                    <div class="type">{{mail_data.product_type|safe}}</div>
+                    <div class="price">M.R.P: ₹ {{mail_data.price|safe}} Rs</div>
+                    <div class="on">ordered on: {{mail_data.ordered_on}}</div>
+                </div>
+            </div>
+        </td>
+
+    </tr>
+    <tr>
+        <td class="seller-info" style="text-align: left; vertical-align: middle;">
+            <b style="display: block; font-size: medium;">Seller details</b>
+            <div>{{add.full_name|safe}}</div>
+            <div style="white-space: pre-line;">{{add.address|safe}}</div>
+            <div>Ph: {{add.mobile}}</div>
+            <div>E-mail: {{add.seller_email}}</div>
+        </td>
+    </tr>
+    <tr>
+        <td class="user-info">
+            <b style="display: block; font-size: medium;">Shipment address</b>
+            <div style="white-space: pre-line;">{{mail_data.address|safe}}</div>
+            <div>E-mail: {{mail_data.email}}</div>
+        </td>
+    </tr>
+
+</table>
+<div style="margin:10px 10px; font-size: 13px;">
+    <div>Thank you, For shopping</div>
+    <div>Team Handicrafts</div>
+</div>
+{% endblock %}

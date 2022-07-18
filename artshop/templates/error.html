@@ -1,0 +1,19 @@
+{% extends 'layout.html' %} {% block body %}
+
+<head>
+	<style>
+		.error-conatiner {
+			padding: 10px;
+			margin: 0 10px;
+			border: 1.5px solid lightgrey;
+			border-radius: 5px;
+		}
+	</style>
+	<title>Handicrafts</title>
+</head>
+<div class="error-conatiner">
+	<h3 style="margin-bottom: 10px;">{{err|safe}}</h3>
+	<a onclick="loading()" href="{{url_for('home')|safe}}" class="btn">Back
+		to home</a>
+</div>
+{% endblock %}

@@ -1,0 +1,200 @@
+{% extends 'layout.html' %} {% block body %}
+
+<head>
+	<title>Handicrafts | Wishlist</title>
+	<style>
+		.no-products-div {
+			border: lightgrey 1.5px solid;
+			border-radius: 5px;
+			padding: 10px;
+		}
+
+		.products {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 10px;
+		}
+
+		.product {
+			color: black;
+			padding: 5px;
+			height: 320px;
+			border: 1.5px solid lightgrey;
+			border-radius: 5px;
+			display: grid;
+			overflow: hidden;
+			gap: 10px;
+			grid-template-rows: 50% 50%;
+		}
+
+		.img-div {
+			width: 100%;
+			overflow: hidden;
+			height: 100%;
+		}
+
+		.product-img {
+			width: 100%;
+			height: 100%;
+		}
+
+		.product-info {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-evenly;
+		}
+
+		.info {
+			font-size: .9rem;
+			display: flex;
+			flex-direction: column;
+			align-items: space-around;
+		}
+
+		.name,
+		.price {
+			font-size: 1.1rem;
+		}
+
+		.actions {
+			display: grid;
+			gap: 10px;
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		.buy-now-btn {
+			background: var(--themeColor);
+			color: white;
+			cursor: pointer;
+			border: var(--themeColor) 1px solid;
+			padding: 5px 10px;
+			width: 100%;
+			text-align: center;
+			height: 100%;
+			transition: .1s .0s ease-in;
+		}
+
+		.buy-now-btn:hover {
+			background: white;
+			color: var(--themeColor);
+		}
+
+		.remove-x {
+			background: white;
+			text-align: center;
+			cursor: pointer;
+			color: black;
+			border: black 1px solid;
+			width: 100%;
+			height: 100%;
+			padding: 5px 10px;
+			transition: .1s .0s ease-in;
+		}
+
+		.remove-x:hover {
+			background: black;
+			color: white;
+		}
+
+		@media(max-width: 400px) {
+			.remove-x {
+				font-size: .7rem;
+			}
+
+			.product {
+				height: 320px;
+			}
+
+			.buy-now-btn {
+				padding: 5px;
+				font-size: .8rem;
+			}
+
+			.info {
+				font-size: .8rem;
+			}
+
+			.name,
+			.price {
+				font-size: 1rem;
+			}
+		}
+
+		@media(min-width: 1024px) {
+
+			.product {
+				display: flex;
+				width: 100%;
+				height: 200px;
+			}
+
+			.info {
+				font-size: 1.1rem;
+			}
+
+			.img-div {
+				width: 170px;
+				margin-right: 10px;
+			}
+
+
+		}
+	</style>
+</head>
+<div class="wishlist-container">
+	<h2 class="lead">
+		{{session.name|safe}}'s Wishlist
+	</h2>
+	{% if data=='no products' %}
+	<div class="no-products-div">
+		<h2>No items!</h2>
+		<p style="margin-bottom: 10px;">
+			You don't have any products in your wishlist, add some now!
+		</p>
+		<a href="/home" class="btn">Back to home</a>
+	</div>
+	{% else %}
+	<div class="products">
+		{% for product in data %}
+		<a href="/view/product/{{product.product_id|safe}}" class="product">
+			<div class="img-div">
+				<img class="product-img" src="/static/productImages/{{product.product_img|safe}}"
+					alt="{{product.product_name|safe}}">
+			</div>
+			<div class="product-info">
+				<div class="info">
+					<div class="name">
+						<div class="ac-name">{{product.product_name|safe}}</div>
+					</div>
+					<div class="type">{{product.product_type|safe}}</div>
+					<div class="price">M.R.P: ₹ {{product.price|safe}}</div>
+					<div class="status">
+						{% if not product.product_quantity_left == 0 %}
+						<small style="color: green;">Product is available</small>
+						{% else %}
+						<small style="color: red;">Product is not available</small>
+						{% endif %}
+					</div>
+					<div class="seller">Sold by <i>{{product.seller|safe}}</i></div>
+				</div>
+				<div class="actions">
+					<form action="/buy/product/saveid_in_session" method="POST">
+						<input type="hidden" name="pid" value="{{product.product_id}}" />
+						{% if product.product_quantity_left == 0 %}
+						<input type="submit" value="Buy now" class="buy-now-btn" disabled />
+						{% else %}
+						<input type="submit" value="Buy now" class="buy-now-btn" />
+						{% endif %}
+					</form>
+					<form action="/wishlist/remove/{{product.product_id|safe}}" class="remove-wishlist-item">
+						<input type="hidden" name="_method" value="REMOVE" />
+						<input type="submit" title="Remove product" name="remove-wishlist-item" value="Remove"
+							class="remove-x" />
+					</form>
+				</div>
+			</div>
+		</a>
+		{% endfor %} {% endif %}
+	</div>
+</div>
+{% endblock %}

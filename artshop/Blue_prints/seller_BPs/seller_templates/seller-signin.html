@@ -1,0 +1,47 @@
+{% extends 'seller-layout.html' %}
+{% block title %}Handicrafts sellers | Signin {% endblock %}
+{% block body %}
+
+<head>
+	<style>
+		.seller-signin-link {
+			display: none;
+		}
+
+		.lead {
+			color: var(--themeColor);
+			margin-bottom: 10px;
+		}
+
+		.seller-signin-form {
+			width: 100%;
+		}
+
+		@media(min-width: 1024px) {
+			.seller-signin-form {
+				width: 50%;
+			}
+		}
+	</style>
+</head>
+<form class="seller-signin-form" method="POST">
+	<h1 class="lead"><i class="fas fa-sign-in-alt" style="margin-right: 10px;"></i>Sign in to your account</h1>
+	<div class="form-data">
+		<label for="signin-business-email">Business E-mail</label>
+		<input class="input" type="email" name="signin-business-email" id="signin-business-email"
+			placeholder="Enter your E-mail" required />
+	</div>
+	<div class="form-data">
+		<label for="signin-business-password">Password</label>
+		<input class="input" type="password" name="signin-business-password" id="signin-business-password"
+			placeholder="Enter your password" required />
+	</div>
+
+	<div class="form-data">
+		<input type="submit" value="Sign in" style="margin: 10px 0;" class="btn" />
+	</div>
+	<a href="/seller.handicrafts/register/step/signup" style="text-decoration: underline;">Don't have an account? </a>
+	<a href="/seller.handicrafts/forgotpassword" style="margin-left: 10px; text-decoration: underline;">Forgot
+		password?</a>
+</form>
+{% endblock %}

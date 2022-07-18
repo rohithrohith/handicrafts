@@ -1,0 +1,123 @@
+{% extends 'layout.html' %} {% block body %}
+
+<head>
+	<title>Handicrafts | Product</title>
+	<style>
+		a {
+			color: black;
+		}
+
+		.product {
+			background: #fff;
+			margin-top: 20px;
+		}
+
+		.product-content {
+			width: 100%;
+			border: lightgrey 1px solid;
+			border-radius: 5px;
+			padding: 10px;
+			margin-bottom: 10px;
+		}
+
+		.product-image-div {
+			display: flex;
+			max-width: 300px;
+			height: auto;
+		}
+
+		.product-image {
+			width: 100%;
+			height: auto;
+			margin: 10px 0;
+		}
+
+		.price {
+			font-size: 1rem;
+		}
+
+		.link-span {
+			margin-top: 10px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-around;
+			align-items: center;
+		}
+
+		.link-span .btn {
+			width: 100%;
+			margin-bottom: 10px;
+		}
+
+		p {
+			margin: 10px 0;
+		}
+
+		.disabled {
+			opacity: 0.8;
+		}
+
+		.disabled:hover {
+			color: white;
+			background-color: var(--themeColor);
+		}
+	</style>
+</head>
+{% if not product == 'deleted' %}
+<div class="product">
+	<div class="product-content">
+		<div class="basic-info">
+			<h2 class="product-name" style="text-transform: capitalize;">
+				{{product.product_name|safe}} {% if product.artist %}
+				<small style="font-weight: 400; font-size: 0.8rem;">By {{product.artist|safe}}</small>
+				{% endif %}
+			</h2>
+			<span class="product-seller">Sold by
+				<i style="text-transform: capitalize;">{{product.seller|safe}}</i></span>
+		</div>
+		<div class="product-image-div">
+			<img src="/static/productImages/{{product.product_img|safe}}" alt="product image" class="product-image" />
+		</div>
+		<div class="price">
+			<h2> ₹ {{product.price|safe}}.00</h2>
+		</div>
+		<div class="product-info">
+			<div class="status">
+				{% if not product.product_quantity_left == 0 %}
+				<small style="color: green;">Product is available</small>
+				{% else %}
+				<small style="color: red;">Product is unavailable</small>
+				{% endif %}
+			</div>
+			<div style="display: flex; align-items: center; gap: 5px; margin: 10px 0;">
+				Ratings: <i class="fas fa-star" style="color: gold;"></i>{{product.rating|safe}}
+				({{product.number_of_raters|safe}})
+			</div>
+			<h2>Product description</h2>
+			<div class="product-desc">{{product.product_desc|safe}}</div>
+		</div>
+		<span class="link-span">
+			<form onsubmit="loading()" action="/buy/product/saveid_in_session" method="POST" style="width:100%;">
+				<input type="hidden" name="pid" value="{{product.product_id}}" />
+				{% if product.product_quantity_left == 0 %}
+				<input type="submit" value="Buy now" style="width: 100%;" class="btn disabled" disabled />
+				{% else %}
+				<input type="submit" value="Buy now" class="btn" />
+				{% endif %}
+			</form>
+
+			<a onclick="loading()" href="/wishlist/{{product.product_name|safe}}/{{product.product_id|safe}}/"
+				style="text-align: center;" class="btn">Add
+				to
+				wishlist</a>
+		</span>
+	</div>
+</div>
+{% else %}
+<div>
+	<h1>Product doesn't exist anymore</h1>
+	<a href="{{url_for('home')}}" class="btn" style="margin: 10px 0;">Back to home</a>
+</div>
+{% endif %}
+
+{% endblock %}

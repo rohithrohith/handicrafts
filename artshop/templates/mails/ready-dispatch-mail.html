@@ -1,0 +1,40 @@
+{% extends 'mail-layout.html' %}
+{% block body%}
+
+<head>
+    <style>
+        h1,
+        h2 {
+            font-weight: normal;
+            margin-top: 10px;
+        }
+
+        h1 {
+            font-size: 24px;
+        }
+
+        .gratitude {
+            margin-top: 10px;
+        }
+
+        h2 {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<h1>Hi, <span style="color: #e44141;">{{data.name|safe}}</span></h1>
+{% if response == 'accept' %}
+<h2>Your request to cancel the order {{data.order_id}} has been accepted and the payment will be refunded as soon as
+    possible.</h2>
+<div class="gratitude">
+    <div>Thank you,</div>
+    <div>Handicrafts seller</div>
+</div>
+{% else %}
+<h2>Your request to cancel the order {{data.order_id}} has been declined by the seller and it can't be cancelled.</h2>
+<div class="gratitude">
+    <div>Thank you,</div>
+    <div>Handicrafts seller</div>
+</div>
+{% endif %}
+{% endblock %}

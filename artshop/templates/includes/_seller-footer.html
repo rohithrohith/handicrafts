@@ -1,0 +1,174 @@
+<head>
+    <style>
+        .footer {
+            background: black;
+            margin-top: 20px;
+            transition: .5s .2s ease;
+            padding: 0 20px;
+            display: block;
+            position: absolute;
+            bottom: 0;
+            font-size: .8rem;
+            overflow: hidden;
+            width: 100%;
+        }
+
+
+
+        .footer-head {
+            color: white;
+            margin-bottom: 10px;
+            padding: 0 30px;
+        }
+
+        .row-1 {
+            display: grid;
+            position: relative;
+            overflow: hidden;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .row-2 {
+            width: 100%;
+        }
+
+        .column {
+            margin-top: 10px;
+        }
+
+        .list-item .list-links {
+            width: 100%;
+            color: white;
+        }
+
+        .footer-form-div {
+            color: white;
+        }
+
+        .footer-form-data {
+            margin-bottom: 2px;
+        }
+
+        .footer-input {
+            height: 30px;
+            border: none;
+            outline: none;
+            padding: 0 10px;
+            width: 100%;
+        }
+
+        .footer-input:focus {
+            outline: none;
+        }
+
+        .btn-form-data {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .footer-btn {
+            background: white;
+            height: fit-content;
+            width: 100%;
+            color: black;
+            padding: 5px;
+            border: none;
+        }
+
+        .footer-btn:hover {
+            background: #eee;
+        }
+
+        .footer-branding {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            padding-bottom: 20px;
+        }
+
+        .footer-brand-img-div {
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-brand-img {
+            transform: scale(.9);
+        }
+
+        .social-icon {
+            width: 100%;
+            margin-left: 10px;
+            font-size: 1.5rem;
+            height: 100%;
+            color: white;
+        }
+
+        .social-icon:hover {
+            color: var(--themeColor);
+        }
+
+        @media(min-width: 750px) {
+            .footer {
+                padding: 10px 150px 10px 150px;
+            }
+        }
+
+        @media(min-width: 1024px) {
+            .footer {
+                padding: 10px 180px 10px 180px;
+            }
+        }
+    </style>
+</head>
+
+<footer class="footer" id="footer">
+    <div class="row-1">
+
+        <div class="column">
+            <ul class="lists">
+                <li class="list-item"><a href="/sellers.handicrafts" class="list-links">Home</a></li>
+                {% if session.is_seller_signined %}
+                <li class="list-item">
+                    <a href="{{url_for('seller.sellerDashboard',businessname=session.seller_name|safe)}}"
+                        class="list-links">Dashboard</a>
+                </li>
+                <li class="list-item">
+                    <a href="{{url_for('seller.sellerOrders',businessname=session.seller_name|safe)}}"
+                        class="list-links">Orders</a>
+                </li>
+                <li class="list-item">
+                    <a href="{{url_for('seller.sellerAccount',businessname=session.seller_name|safe)}}"
+                        class="list-links">My
+                        account</a>
+                </li>
+                <li class="list-item">
+                    <a href="{{url_for('seller.sellerLogout')}}" class="list-links">Logout</a>
+                </li>
+                {% else %}
+                <li class="list-item"><a href="{{url_for('seller.sellerSignin')}}" class="list-links">Signin</a></li>
+                <li class="list-item"><a href="{{url_for('seller.sellerRegisterSellSignup')}}"
+                        class="list-links">Register</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="footer-branding">
+            <div class="footer-brand-img-div">
+                <img src="/static/FooterHandicraftsSellersLogo.png" alt="footer logo" class="footer-brand-img">
+            </div>
+            <div class="connect">
+                <a href="" style="display: inline-block;"><i class="fab fa-instagram social-icon"></i></a>
+                <a href="" style="display: inline-block;"><i class="fab fa-twitter social-icon"></i></a>
+                <a href="" style="display: inline-block;"><i class="fab fa-linkedin-in social-icon"></i></a>
+            </div>
+        </div>
+    </div>
+
+</footer>
+<script>
+    var footer = document.getElementById('footer');
+    var bodyPadding = footer.offsetHeight + 30;
+    document.getElementById('container').style.paddingBottom = bodyPadding + 'px';
+</script>

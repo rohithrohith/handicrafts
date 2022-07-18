@@ -1,0 +1,271 @@
+{% extends 'seller-layout.html' %}
+
+{% block title %}Handicrafts sellers | Register {% endblock %}
+{% block body %}
+
+<head>
+    {% block style %}
+    <style>
+        .file-input:not(:placeholder-shown):invalid {
+            outline: none;
+        }
+
+        .form-data-row {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 10px;
+        }
+
+        .point::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            background: black;
+            border-radius: 50%;
+        }
+
+        #next1-field {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .cell {
+            width: 100%;
+        }
+
+        ol {
+            margin-left: 20px;
+        }
+
+        .file-form-data {
+            margin-top: 5px;
+            height: 120px;
+            position: relative;
+            border: #ccc 1.5px solid;
+            display: flex;
+        }
+
+        .file-input {
+            height: fit-content;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+        }
+
+        .file-design {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            gap: 5px;
+            pointer-events: none;
+            top: 0;
+            padding: 10px;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        @media(min-width: 1024px) {
+            .business-info-form {
+                width: 50%;
+            }
+        }
+
+        @media(max-width:500px) {
+            .file-form-data {
+                height: 150px;
+            }
+        }
+    </style>
+    {% endblock %}
+</head>
+<h1 class="lead" style="margin-bottom:10px;">Give us your business info</h1>
+<form method="POST" onsubmit="laoding()" name="info-form" class="business-info-form" enctype="multipart/form-data">
+    <div class="form-data">
+        <label for="gstin">Enter yout GSTIN number :</label>
+        <input type="text" class="input" name="gstin" placeholder=" " id="gstin" maxlength="15"
+            pattern="(1[0-9]|2[0-9]|3[0-5])([A-Z]{3}[chfaptbljgCHFAPTBLJG]{1}[A-Z]{1}[0-9]{4}[A-Z]{1})([12]{1})(z|Z)([A-Z0-9])"
+            autocomplete="off" placeholder="GSTIN" required>
+    </div>
+    <div class="form-data">
+        <label for="pan">Enter yout PAN number :</label>
+        <input type="text" class="input" name="pan" placeholder=" " id="pan"
+            pattern="[A-Z]{3}[chfaptbljgCHFAPTBLJG]{1}[A-Z]{1}[0-9]{4}[A-Z]{1}" maxlength="10" required>
+    </div>
+    <h3 class="lead" style="font-size: 1.1rem; margin: 5px 0;">Enter business address</h3>
+    <div class="form-data">
+        <label for="fullname">Full name :</label>
+        <input type="text" class="input" name="full-name" placeholder=" " autocomplete="off" autocapitalize="on"
+            id="fullname" required>
+    </div>
+    <div class="form-data mobile">
+        <label for="mobile-nbr">Mobile number :</label>
+        <input class="input" style="margin-left: 42px;" type="number" name="mobile-number" placeholder=" "
+            id="mobile-nbr" required />
+    </div>
+    <div class="form-data">
+        <label for="house">House :</label>
+        <input class="input" type="text" name="house" placeholder=" " id="house" required />
+    </div>
+    <div class="form-data">
+        <label for="area">Area, village:</label>
+        <input class="input" type="text" name="area" placeholder=" " id="area" required />
+    </div>
+    <div class="form-data">
+        <label for="landmark">Landmark :</label>
+        <input class="input" type="text" name="landmark" placeholder=" " id="landmark" required />
+    </div>
+    <div class="form-data">
+        <label for="town">Town or city :</label>
+        <input class="input" type="text" name="town" placeholder=" " id="town" required />
+    </div>
+    <div class="form-data">
+        <label for="pin-nbr">Pincode :</label>
+        <input class="input" type="number" name="pin-number" placeholder=" " id="pin-nbr" required />
+    </div>
+    <div class="form-data">
+        <label for="state">State :</label>
+        <input class="input" type="text" name="state" placeholder=" " id="state" required />
+    </div>
+    <p id="msg"></p>
+    <button type="button" class="btn" id="next-button" style="margin-top: 15px;">Next</button>
+    <div id="next1-field">
+        <div class="upload-info">
+            <div><i><b>Signature upload:</b> Upload a scnned copy of your signature for invoices.(max-size:
+                    50kb)</i></div>
+            <div style="margin-top:10px;;">
+                <i><b>Identity proof upload:</b> Any scanned copy (min-size: 1MB) government issued IDs(Both sides)
+                    containing address:
+                </i>
+                <i class="fas fa-info-circle have-info-click" onclick="showInfo('identitydocsinfo')"
+                    style="color:rgba(0, 181, 204, 1); cursor: pointer;">
+                    <div class="click-info" id="identitydocsinfo">
+                        <div style="font-size: .9rem; margin-bottom: 5px;">Accepted documents:</div>
+                        <hr style="margin-bottom: 5px;">
+                        <div style="font-size: .8rem;">1. AADHAAR</div>
+                        <div style="font-size: .8rem;">2. Driving license</div>
+                        <div style="font-size: .8rem;">3. Voter ID</div>
+                    </div>
+                </i>
+            </div>
+        </div>
+        <div class="form-data" style="margin-top: 15px;">
+            <label for="ID">Select ID proof :</label>
+            <div style="display: flex; gap: 10px;">
+                <div style="display: flex; gap: 10px; align-items: center; font-size: .8rem;"><input type="radio"
+                        name="ID" class="radio-input" value="aadhaar" required>AADHAR</div>
+                <div style="display: flex; gap: 10px; align-items: center; font-size: .8rem;"><input type="radio"
+                        name="ID" class="radio-input" value="driving license" required>Driving license</div>
+                <div style="display: flex; gap: 10px; align-items: center; font-size: .8rem;"><input type="radio"
+                        name="ID" class="radio-input" value="voter id" required>Voter ID</div>
+            </div>
+        </div>
+        <div class="form-data" style="margin-top: 15px;">
+            <label for="ID-nbr">Identity card ID :</label>
+            <input type="text" pattern="[a-zA-Z0-9]{10,}" name="ID-nbr" id="ID-nbr" placeholder=" " class="input"
+                required>
+        </div>
+        <div class="form-data-row">
+            <div class="cell">
+                Upload your signature
+                <div class="file-form-data">
+                    <input class="input file-input" type="file" name="sign" id="sign-upload" required />
+                    <label for="sign-upload" class="file-design">
+                        <i class="fas fa-plus" style="color: #999; font-size: 1.5rem;"></i>
+                        <div class="head" style="font-size: .9rem;">Drag and drop or Browse signature file
+                        </div>
+                        <small style="font-size: .8rem;">Allowed file formats are JPG,JPEG and PDF</small>
+                    </label>
+                </div>
+                <p id="sign-name" style="margin-top: 10px; color: grey; font-size: .8rem;"></p>
+            </div>
+            <div class="cell">
+                Upload identity proof
+                <div class="file-form-data">
+                    <input class="input file-input" type="file" name="identity" id="identity-upload" required />
+                    <label for="sign-upload" class="file-design">
+                        <i class="fas fa-plus" style="color: #999; font-size: 1.5rem;"></i>
+                        <div class="head" style="font-size: .9rem;">Drag and drop or Browse identity file
+                        </div>
+                        <small style="font-size: .8rem;">Allowed file formats PDF</small>
+                    </label>
+                </div>
+                <p id="identity-name" style="margin-top: 10px; color: grey; font-size: .8rem;"></p>
+            </div>
+        </div>
+        <div class="form-data" style="margin-top: 15px;">
+            <button type="submit" id="subBtn" class="btn">Submit</button>
+        </div>
+    </div>
+
+</form>
+{% block script %}
+<script>
+    var nxtStep1 = document.getElementById('next1-field');
+    var nxtBtn = document.getElementById('next-button');
+    var signInput = document.getElementById('sign-upload');
+    var identityInput = document.getElementById('identity-upload');
+
+    nxtBtn.addEventListener('click', () => {
+        var form = document.forms['info-form'];
+        if ((form['gstin'].checkValidity() && form['pan'].checkValidity() && form['full-name'].checkValidity() && form['mobile-number'].checkValidity() && form['pin-number'].checkValidity() && form['house'].checkValidity() && form['area'].checkValidity() && form['landmark'].checkValidity() && form['state'].checkValidity() && form['town'].checkValidity())) {
+            nxtStep1.style.display = 'block';
+            nxtBtn.style.display = 'none';
+        } else {
+            document.getElementById('msg').innerHTML = 'Fill fields with valid inputs!';
+            document.getElementById('msg').style.color = 'red';
+            document.getElementById('msg').style.marginTop = '10px';
+            setTimeout(() => {
+                document.getElementById('msg').style.display = 'none';
+            }, 3000);
+        }
+
+    });
+
+    signInput.addEventListener('input', () => {
+        signFile = signInput.files[0];
+        fname = signFile.name;
+        ext = fname.split(".")[1];
+        console.log(ext);
+        if (ext == 'jpg' | ext == 'jpeg' | ext == 'jfif' | ext == 'png') {
+            size = signFile.size;
+            size = parseInt(size) / (1024);
+            if (size < 20) {
+                document.getElementById('sign-name').innerHTML = fname;
+            }
+            else {
+                alert("File resolution too high! maximum size: 20KB");
+            }
+        } else {
+            alert('Invalid image format!');
+        }
+
+    });
+
+    identityInput.addEventListener('input', () => {
+        identityFile = identityInput.files[0];
+        f2name = identityFile.name;
+        ext = f2name.split(".")[1];
+        console.log(ext);
+        if (ext == 'pdf') {
+            size = identityFile.size;
+            size = parseInt(size) / (1024);
+            if (size > 20) {
+                document.getElementById('identity-name').innerHTML = f2name;
+            }
+            else {
+                alert("File resolution too high! maximum size: 20KB");
+            }
+        } else {
+            alert('Invalid image format! only PDF');
+        }
+
+    });
+
+</script>
+{% endblock %}
+{% endblock %}

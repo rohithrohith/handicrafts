@@ -1,0 +1,81 @@
+{% extends 'layout.html' %} {% block body %}
+
+<head>
+	<title>Handicrafts | Reset password</title>
+	<style>
+		.forms {
+			border: #eee solid 2px;
+			margin-top: 10px;
+			position: relative;
+			padding: 10px;
+			border-radius: 5px;
+		}
+
+		.resend-otp {
+			border: none;
+			color: blue;
+			background: none;
+			padding: 5px 0;
+		}
+
+
+		.hidden-form-datas {
+			display: none;
+		}
+
+		@media(min-width:1024px) {
+			.form-div {
+				width: 50%;
+			}
+		}
+	</style>
+</head>
+<div class="reset-otp-container">
+	<div class="form-div">
+		<div class="forms">
+			<form method="POST" onsubmit="loading()" action="/resetpassword" class="otp-form" id="otp-form">
+				<h1>Reset password</h1>
+				<div class="form-data">
+					<input type="text" name="otp" id="otp" value="" class="input" placeholder=" " maxlength="6"
+						minlength="6" pattern="[a-zA-Z0-9]{6}" required />
+					<label for="otp"><span class="span" id="otp-span">Enter the otp sent to your E-mail</span></label>
+				</div>
+				<div id="hidden-form-datas" class="hidden-form-datas">
+					<div class="form-data">
+						<input type="password" name="new-password" id="new-password" placeholder=" " class="input"
+							required />
+						<label for="new-password"><span class="span">New password</span></label>
+					</div>
+					<div class="form-data">
+						<input type="password" name="confirm-new-password" placeholder=" " id="confirm-new-password"
+							class="input" required />
+						<label for="confirm-new-password"><span class="span">Confirm new password</span></label>
+					</div>
+				</div>
+				<input type="submit" value="Submit OTP" class="btn" id="submit-btn" />
+			</form>
+			<form action="/forgotpassword" method="POST" class="resend-otp">
+				<input type="hidden" value="{{session.email|safe}}" name="forgot-email">
+				<input type="submit" value="Resend OTP" class="resend-otp">
+			</form>
+		</div>
+	</div>
+</div>
+<script>
+	var otp = document.getElementById('otp');
+	var submitBtn = document.getElementById('submit-btn');
+	var passwordInputs = document.getElementById('hidden-form-datas');
+	var otpSpan = document.getElementById('otp-span');
+	otp.addEventListener('change', (e) => {
+		val = otp.value;
+		otp.disabled = false;
+		submitBtn.value = 'Submit new password';
+		if (val.length == 6) {
+			passwordInputs.style.display = 'block';
+		} else {
+			submitBtn.value = 'Submit OTP';
+			passwordInputs.style.display = 'none';
+		}
+	});
+</script>
+{% endblock %}

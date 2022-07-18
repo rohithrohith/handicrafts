@@ -1,0 +1,80 @@
+{% extends 'layout.html' %}
+{% block body %}
+
+<head>
+    <title>Handicrafts | Request order cancelation</title>
+    <style>
+        #reason {
+            outline: none !important;
+        }
+
+        #hidden {
+            display: none;
+        }
+
+        .cancel-request-form {
+            border: lightgrey 2px solid;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        @media(min-width:1024px) {
+            .cancel-request-form {
+                width: 50%;
+            }
+        }
+    </style>
+</head>
+<form method="GET" class="cancel-request-form" id="cancel-request-form">
+    <h1 class="lead" style="margin-bottom: 20px;">Request for order cancelation</h1>
+    <div class="form-data">
+        <select name="reason" id="reason" style="height:30px;" required>
+            <option value="reason" selected disabled>Select reason</option>
+            <option value="Ordered by mistake">Ordered by mistake</option>
+            <option value="Wrong information given">Wrong information given</option>
+            <option value="others">Other reasons</option>
+        </select>
+    </div>
+    <div class="from-data" id="hidden">
+        <span style="font-size: .9rem; margin: 5px 0; display: block;">Describe your reason for cancellation</span>
+        <textarea name="reason-desc" id="reason-desc" cols="30" rows="5"
+            style="width: 100%; resize: none; outline: none; padding: 5px;"></textarea>
+    </div>
+    <input type="hidden" name="order_id" value="{{id|safe}}">
+    <button type="button" onclick="verify('cancel-request-form')" id="submibtn" class="btn"
+        style="margin-top: 20px;">Request cancellation</button>
+</form>
+
+<script>
+    var reason = document.getElementById('reason');
+    var reasonDesc;
+    var reasonValue = 'reason';
+    reason.onchange = function display(e) {
+        reasonValue = e.target.value;
+        if (reasonValue == 'others') {
+            document.getElementById('hidden').style.display = 'block';
+        }
+        else {
+            document.getElementById('hidden').style.display = 'none';
+        }
+    }
+    function verify(id) {
+        if (reasonValue == 'reason') {
+            alert('Select reason for the cancellation!')
+        }
+        else {
+            if (reasonValue == 'others') {
+                reasonDesc = document.getElementById('reason-desc').value;
+                if (parseInt(reasonDesc.length) > 100) {
+                    document.getElementById(id).submit();
+                }
+                else {
+                    alert('Please describe your reason for cancellation 100 words!');
+                }
+            } else {
+                document.getElementById(id).submit();
+            }
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'layout.html' %} {% block body %}
+
+<head>
+	<title>Handicrafts | Addresses</title>
+	<style>
+		.address-box {
+			padding: 10px;
+			font-size: .8rem;
+			margin-bottom: 5px;
+			border: lightgrey solid 2px;
+			border-radius: 6px;
+			color: black;
+		}
+
+		.capitalize {
+			text-transform: capitalize;
+		}
+
+		.remove-address-btn {
+			margin: 5px 0;
+			padding: 2px 5px;
+			color: red;
+			background-color: white;
+			border: 1px solid red;
+			font-size: 1rem;
+			cursor: pointer;
+		}
+
+		.add-address {
+			margin-top: 10px;
+			padding: 0 10px;
+		}
+
+
+		@media(min-width: 600px) {
+			.address-box {
+				width: 50%;
+			}
+
+			.no-address-box {
+				width: 100%;
+			}
+		}
+	</style>
+</head>
+<div class="your-addresses-container">
+	<h1 class="lead">
+		<span style="text-transform: capitalize;">{{session.name|safe}}</span>'s
+		addresses
+	</h1>
+	<div class="addresses">
+		{% if addresses=='' %}
+		<div class="address-box no-address-box">
+			<h3 class="head">
+				You doesn't have any saved addresses!
+			</h3>
+			<a href="{{url_for('addAddress',user=session.name|safe)}}" style="margin-top: 10px;" class="btn">Add address
+				now</a>
+		</div>
+		{% else %} {% for address in addresses %}
+		<div class="address-box">
+			<div class="head" style="text-transform: capitalize;  font-size: 1rem; font-weight: bold;">
+				{{address.full_name|safe}}
+			</div>
+			<div class="address" style="white-space: pre-line; margin-top: -15px;">
+				{{address.address|safe}}
+			</div>
+			<div class="capitalize">
+				phone: {{address.mobile|safe}}
+			</div>
+			<form action="/{{session.name}}/removeaddress" class="remove-address-form">
+				<input type="hidden" name="address-id" value="{{address.address_id|safe}}" />
+				<input type="submit" value="Remove address" class="remove-address-btn" />
+			</form>
+		</div>
+		{% endfor %}
+		<div class="add-address">
+			<a href="/{{session.name|safe}}/addaddress" class="btn">Add addresses</a>
+		</div>{% endif %}
+	</div>
+
+
+</div>
+{% endblock %}

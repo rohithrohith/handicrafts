@@ -1,0 +1,52 @@
+{% extends 'layout.html' %} {% block body %}
+
+<head>
+	<style>
+		.signinup {
+			display: none;
+		}
+
+		.form {
+			padding: 0 10px;
+		}
+
+		.signin-form {
+			border: lightgrey solid 2px;
+			margin-top: 10px;
+			padding: 10px;
+			border-radius: 5px;
+		}
+
+		@media(min-width:1024px) {
+			.form {
+				width: 50%;
+			}
+		}
+	</style>
+	<title>Handicrafts | Signin</title>
+</head>
+<div class="form">
+	<form class="signin-form" method="POST" onsubmit="loading()">
+
+		<h1 style="margin-bottom: 15px;" class="lead">Sign
+			In</h1>
+
+		<div class="form-data">
+			<input class="input" placeholder=" " type="email" name="signin-email" id="email" required />
+			<label for="email"><span class="span">Enter your E-mail</span></label>
+		</div>
+		<div class="form-data">
+			<input class="input" placeholder=" " type="password" name="signin-password" id="password" required />
+			<label for="password"><span class="span">Enter your password</span></label>
+		</div>
+		<div class="form-data">
+			<input type="submit" value="Sign in" class="btn" style="margin: 10px 0;" />
+		</div>
+		<a href="/register" onclick="loading()" class="assistance-link">Don't
+			have an account?</a>
+		<a href="/forgotpassword" onclick="loading()" class="assistance-link" style="margin-left: 10px;">Forgot
+			password?</a>
+	</form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="shortcut icon" href="/static/favicon/favicon.ico" type="image/x-icon">
+	<link href="https://fonts.googleapis.com/css?family=Satisfy&display=swap" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet" />
+	<title>Handicrafts | Order summary</title>
+	<style>
+		:root {
+			--themeColor: #e44141
+		}
+
+		* {
+			box-sizing: border-box;
+			font-family: 'nunito', sans-serif;
+			margin: 0;
+			padding: 0;
+		}
+
+
+		header {
+			display: flex;
+			justify-items: center;
+			justify-content: center;
+			position: fixed;
+			width: 100%;
+			padding: 5px 10px;
+			background: white;
+			border-bottom: 2px solid var(--themeColor);
+		}
+
+		.order-summary {
+			padding: 80px 10px 10px 10px;
+		}
+
+		.brand a {
+			display: flex;
+		}
+
+		.content {
+			padding: 10px;
+			border-radius: 5px;
+			border: lightgrey solid 1.5px;
+		}
+
+		.product-content {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.p-img {
+			max-width: 600px;
+			height: auto;
+		}
+
+		.p-img img {
+			width: 100%;
+			padding-bottom: 10px;
+		}
+
+		.info {
+			display: flex;
+			justify-content: space-between;
+			padding-bottom: 10px;
+			border-bottom: lightgrey 1.5px solid;
+		}
+
+		.p-info {
+			padding-bottom: 10px;
+			margin: 5px 0;
+			height: fit-content;
+		}
+
+		.payment-details {
+			margin: 10px 0;
+			border-bottom: lightgrey 1.5px solid;
+			padding-bottom: 10px;
+		}
+
+		.payment-details table th,
+		.payment-details table td {
+			font-size: small;
+			width: 7rem;
+		}
+
+		.payment-details table th {
+			text-align-last: left;
+			vertical-align: center;
+		}
+
+		.payment-details table td {
+			text-align-last: right;
+			vertical-align: center;
+		}
+
+		.razorpay-payment-button {
+			background: var(--themeColor);
+			padding: 3px 10px;
+			font-size: 1rem;
+			display: block;
+			color: white;
+			border: var(--themeColor) 1px solid;
+			margin: 5px 0;
+			transition: ease-in .2s .1s;
+			cursor: pointer;
+		}
+
+		.razorpay-payment-button:hover {
+			color: var(--themeColor);
+			background: white;
+		}
+
+		@media(min-width: 750px) {
+			.order-summary {
+				padding: 80px 150px 10px 150px;
+			}
+		}
+
+		@media(min-width: 1024px) {
+			.order-summary {
+				width: 60%;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<header>
+		<div class="brand">
+			<a href="/home"><img src="/static/HandicraftsLogo1.png" alt=""></a>
+		</div>
+	</header>
+	<div class="order-summary">
+		<h1 style="font-size: 30px;">Order summary</h1>
+		<div class="content">
+			<div class="product-content">
+				<div class="p-img">
+					<img src="/static/productImages/{{product.product_img|safe}}" alt="{{product.product_name|safe}}" />
+				</div>
+			</div>
+			<div class="info">
+				<div class="p-info" style="font-size: small;">
+					<div style="font-size: 18px; margin-bottom: 5px; font-weight: bold;">
+						{{product.product_name|safe}}
+					</div>
+					<div>{{product.product_type|safe}}</div>
+					<div>Seller: <i>{{product.seller|safe}}</i></div>
+					<div style="font-size: 1rem; font-weight: bold;">
+						M.R.P: ₹ {{product.price|safe}}
+					</div>
+				</div>
+				<div class="address-content" style="font-size: small;">
+					<div class="address" style="text-align: right;">
+						<h2 style="margin-bottom: 5px; font-size: large;">Shipment and billing address</h2>
+						<div class="" style="font-weight: bold;">
+							{{address.full_name|safe}}
+						</div>
+						<div style="white-space: pre-line;">{{address.address|safe}}</div>
+						<div>Ph: {{address.mobile|safe}}</div>
+					</div>
+				</div>
+			</div>
+			<div class="payment-details">
+				<table>
+					<tr>
+						<th>Net price</th>
+						<td>₹ <span id="price"></span>.00</td>
+					</tr>
+					<tr>
+						<th>Tax rate</th>
+						<td>18%(GST)</td>
+					</tr>
+					<tr>
+						<th>Shipment charges</th>
+						<td>70.00</td>
+					</tr>
+					<tr>
+						<th>Tax amount</th>
+						<td>₹ <span id="txamt"></span>.00</td>
+					</tr>
+					<tr>
+						<th>Total amount</th>
+						<td style="font-weight:bold;">₹ <span id="tamt"></span>.00</td>
+					</tr>
+				</table>
+			</div>
+			<form onsubmit="loading()" action="/buy/placeorder" method="POST">
+				<script src="https://checkout.razorpay.com/v1/checkout.js" data-key="rzp_test_Lk3iewoAxw0VOz"
+					data-amount="{{rprice|safe}}" data-currency="INR" data-buttontext="Continue to payment"
+					data-description="Test transaction" data-image="/static/productImages/{{product.product_img|safe}}"
+					data-prefill.name="{{session.name|safe}}" data-prefill.email="{{session.mail|safe}}"
+					data-prefill.contact="{{address.mobile|safe}}" data-theme.color="#e44141"></script>
+				<input type="hidden" name="address-id" value="{{address.address_id|safe}}" />
+				<input type="hidden" custom="Hidden Element" name="hidden" />
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript">
+		window.onload = function () {
+			var price = '{{product.price|safe}}.00';
+			document.getElementById('price').innerHTML = Math.round(parseInt(price)).toLocaleString({ type: 'currency', currency: 'INR' });
+			document.getElementById('txamt').innerHTML = (Math.round(parseInt(price) * .18)).toLocaleString({ type: 'currency', currency: 'INR' });
+			document.getElementById('tamt').innerHTML = (Math.round(parseInt(price) * .18) + 70 + parseInt(price)).toLocaleString({ type: 'currency', currency: 'INR' });
+		};
+	</script>
+</body>
+
+</html>

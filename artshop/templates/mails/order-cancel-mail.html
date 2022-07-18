@@ -1,0 +1,26 @@
+{% extends 'mail-layout.html' %}
+{% block body %}
+<h1 style="color: #e44141;">Order cancel alert!</h1>
+<p>
+    The order with order ID '{{data.order_id|safe}}' has been cancelled due to the reason:
+    "{{reason|safe}}"
+</p>
+<div class="order-details">
+    <h3 style="font-weight: normal; margin-top: 10px;">The order details are given below:</h3>
+    <div class="prod-img" style="margin-top: 10px;">
+        <img src="https://gracious-tesla-35e8db.netlify.app/productImages/{{data.product_img|safe}}"
+            alt="{{data.product_name|safe}}" class="img">
+    </div>
+    <div class="user-info" style="font-size: .8rem;">
+        <div>{{data.product_name|safe}}</div>
+        <div>Order ID: {{data.order_id|safe}}</div>
+        <div>{{data.product_type|safe}}</div>
+        <div>M.R.P: $ {{data.price|safe}}</div>
+        <div>Ordered on: {{data.ordered_on|safe}}</div>
+    </div>
+    <a href="http://localhost:9000/seller.handicrafts/cancelrequest/view/{{data.canreq_id|safe}}"
+        style="margin-top: 10px; color: #e44141; background: none; border: 1px solid #e44141;" class="btn">
+        View request
+    </a>
+</div>
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends 'seller-layout.html' %}
+{% block title %}Handicrafts sellers | My account {% endblock %}
+{% block body %}
+
+<head>
+	<style>
+		.seller-info-table {
+			margin-top: 10px;
+			margin-bottom: 10px;
+			width: 100%;
+		}
+
+		th {
+			width: fit-content;
+			border-left: 2px solid var(--themeColor);
+			text-align: left;
+		}
+
+		.info-table-row {
+			font-size: 1rem;
+			background: #eee;
+		}
+
+		.info-table-column {
+			padding: 5px;
+		}
+
+		.edit-btn {
+			color: white;
+			border-radius: 5px;
+			padding: 3px 5px;
+			background-color: var(--themeColor);
+		}
+
+		.verify-cell {
+			align-items: center;
+			position: relative;
+			height: 100%;
+			display: flex;
+		}
+
+		.verify-btn {
+			padding: 3px 5px;
+			cursor: pointer;
+			width: fit-content;
+			height: fit-content;
+		}
+
+		.verify-btn:hover {
+			background: white;
+		}
+
+		.btn-group {
+			display: flex;
+			gap: 10px;
+			margin: 20px 0;
+		}
+
+		@media(min-width: 1024px) {
+			.seller-info-section {
+				width: 50%;
+			}
+		}
+	</style>
+</head>
+<div class="seller-info-section">
+	<h1 class="lead">
+		<i class="fas fa-user-circle" style="margin-right:10px;"></i>Your account
+	</h1>
+	<table class="seller-info-table">
+		<tr class="info-table-row">
+			<th class="info-table-column">Name</th>
+			<td class="info-table-column" style="text-transform: capitalize;">{{seller.seller_name|safe}}</td>
+		</tr>
+		<tr class="info-table-row">
+			<th class="info-table-column">E-mail</th>
+			<td class="info-table-column">{{seller.seller_email|safe}}</td>
+		</tr>
+		<tr class="info-table-row">
+			<th class="info-table-column">E-mail verified status</th>
+			<td class="info-table-column verify-cell" style="text-transform: capitalize;">
+				<div style="margin-right: 10px;">{% if seller.is_email_verified %}
+					Verified
+					<i class="fas fa-check-circle" style="color: green;"></i>
+					{% else %}
+					Not Verified</div>
+				<form action="{{url_for('seller.sellerExternalVerification')}}" method="GET">
+					<input type="hidden" name="email" value="{{seller.seller_email|safe}}">
+					<input type="submit" value="Verify now" class="verify-btn">
+				</form>
+				{% endif %}
+			</td>
+		</tr>
+		<tr class="info-table-row">
+			<th class="info-table-column">Identity and GST verified status</th>
+			<td class="info-table-column verify-cell" style="text-transform: capitalize;">
+				{% if seller.is_identity_submitted %}
+				<div style="margin-right: 10px;">
+					{% if seller.is_gst_verified and seller.is_identity_verified %}
+					Verified
+					<i class="fas fa-check-circle" style="color: green;"></i>
+					{% else %}
+					{% if verification_status=='verificationDeclined' %}
+					Verification declined
+					<form onsubmit="loading()" action="{{url_for('seller.sellerRegisterSellerInfo')}}" method="GET"
+						style="margin-left: 10px;">
+						<input type="submit" value="verify now" class="verify-btn">
+					</form>
+					{% else %}
+					Submitted identity proof (To be verified)
+					<small style="display: inline-block;">You get results in 2-3 business days after
+						submmission.</small>
+					{% endif %}
+					{% endif %}
+				</div>
+				{% else %}
+				Not verified
+				<form onsubmit="loading()" action="{{url_for('seller.sellerRegisterSellerInfo')}}"
+					style="margin-left: 10px;" method="GET">
+					<input type="submit" value="verify now" class="verify-btn">
+				</form>
+				{% endif %}
+			</td>
+		</tr>
+	</table>
+
+	<div class="btn-group">
+		<a href="{{url_for('seller.editSellerPassword',businessname=seller.seller_name|safe)}}" class="btn">Edit
+			password</a>
+		<a href="{{url_for('seller.editSellerAccount',businessname=seller.seller_name|safe)}}" class="btn">Edit address
+			or
+			name</a>
+	</div>
+	<div style="margin-top: 10px;">Delete your seller account
+		<a href="{{url_for('seller.sellerAccountDelete',businessname=seller.seller_name|safe)}}"
+			style="color: red; display: inline-block; text-decoration: underline;">Here
+		</a>
+	</div>
+</div>
+{% endblock %}

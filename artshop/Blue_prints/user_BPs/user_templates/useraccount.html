@@ -1,0 +1,76 @@
+{% extends 'layout.html' %} {% block body %}
+
+<head>
+	<title>Handicrafts | Your account</title>
+	<style>
+		.link-list {
+			display: flex;
+			margin-top: 10px;
+			flex-direction: column;
+			justify-content: center;
+		}
+
+		.link-item {
+			border: lightgrey 1.5px solid;
+			border-radius: 5px;
+			padding: 5px;
+			margin-bottom: 5px;
+		}
+
+		.link {
+			color: black;
+			font-size: 1.5rem;
+		}
+
+		@media(min-width: 1024px) {
+			.content {
+				width: 50%;
+			}
+		}
+	</style>
+</head>
+<div class="content">
+	<h1 class="lead">Hello {{data.name|safe}}</h1>
+	<ul class="link-list">
+		{% if not data.is_verified %}
+		<li class="link-item">
+			<a href="/external/emailverification/{{data.email|safe}}" class="link">Verify account</a>
+			<p class="info-p">
+				Get your account verifed
+			</p>
+		</li>
+		{% endif %}
+		<li class="link-item">
+			<a href="/{{data.name|safe}}/wishlist" class="link">Your wishlist</a>
+			<p class="info-p">
+				See those products which you wished to buy
+			</p>
+		</li>
+		<li class="link-item">
+			<a href="/{{data.name|safe}}/orders" class="link">Your orders</a>
+			<p class="info-p">
+				See your orders and track them here
+			</p>
+		</li>
+		<li class="link-item">
+			<a href="/{{data.name|safe}}/addresses" class="link">Your addresses</a>
+			<p class="info-p">
+				Handle your delivering addresses or add new one
+			</p>
+		</li>
+		<li class="link-item">
+			<a href="/{{data.name|safe}}/changepassword" class="link">Change password</a>
+			<p class="info-p">
+				Wish to change your password? click here
+			</p>
+		</li>
+		<li class="link-item">
+			<a href="/{{data.name|safe}}/deleteaccount" style="color: red;" class="link">Delete your account</a>
+			<p class="info-p">
+				Wish to delete your accoount? click here
+			</p>
+		</li>
+	</ul>
+</div>
+
+{% endblock %}

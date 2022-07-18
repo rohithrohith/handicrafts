@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<link rel="icon" type="image/icon" href="/static/seller-favicon/favicon.ico" />
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
+	<title>{% block  title %}{% endblock %}</title>
+	<link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css?family=Satisfy&display=swap" rel="stylesheet" />
+	<script src="https://kit.fontawesome.com/b5f6f82057.js" crossorigin="anonymous"></script>
+	<script src="https://cdn.ckeditor.com/4.14.1/basic/ckeditor.js"></script>
+	<style>
+		/* GENERAL CSS */
+		:root {
+			--themeColor: #e44141;
+		}
+
+		* {
+			padding: 0;
+			margin: 0;
+			box-sizing: border-box;
+		}
+
+		input:not(:placeholder-shown):invalid {
+			outline: red 2px solid;
+			border: none;
+		}
+
+		input[type=password]:not(:placeholder-shown):invalid {
+			outline: lightgrey 1px solid;
+		}
+
+		input[type=password]:not(:placeholder-shown):focus {
+			outline: black 1px solid;
+		}
+
+		.radio-input {
+			outline: none;
+		}
+
+		.radio-input:not(:placeholder-shown):invalid {
+			outline: none;
+		}
+
+		.radio-input:not(:placeholder-shown):valid {
+			outline: none;
+		}
+
+		input:focus {
+			outline: 1.5px solid black;
+			border: none;
+		}
+
+		textarea:focus {
+			outline: 1px solid black;
+			border: none;
+		}
+
+		input::-webkit-outer-spin-button,
+		input::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+
+		textarea::-webkit-outer-spin-button,
+		textarea::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+
+		textarea:focus {
+			border: 1px solid black;
+		}
+
+		input[type=number] {
+			-moz-appearance: textfield;
+		}
+
+		*::-webkit-scrollbar {
+			display: none;
+		}
+
+		.mobile {
+			position: relative;
+		}
+
+		.mobile::after {
+			content: "+91";
+			border: #aaa solid 1px;
+			position: absolute;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 0 5px;
+			width: fit-content;
+			z-index: 4;
+			left: 0;
+			bottom: 0;
+			height: 33px;
+			background: #eee;
+		}
+
+		.money {
+			position: relative;
+		}
+
+		.money::after {
+			content: "₹";
+			border: #aaa solid 1px;
+			position: absolute;
+			display: flex;
+			color: black;
+			align-items: center;
+			justify-content: center;
+			padding: 0 10px;
+			width: fit-content;
+			z-index: 4;
+			left: 0;
+			bottom: 0;
+			height: 33px;
+			background: #eee;
+		}
+
+		#overlay {
+			position: absolute;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+			pointer-events: none;
+			z-index: 3;
+			transition: .5s .2s ease;
+		}
+
+		.flash-div {
+			display: flex;
+			margin-bottom: 10px;
+			align-items: center;
+			padding: 0 20px;
+			width: 100%;
+			justify-content: space-between;
+		}
+
+		.success {
+			background: rgba(212, 237, 218, .7);
+		}
+
+		.error {
+			background: rgba(248, 215, 218, .7);
+		}
+
+		.flash-error {
+			color: #721c24;
+		}
+
+		.flash-success {
+			color: #155724;
+		}
+
+		.flash-close {
+			font-size: 1.2rem;
+			font-weight: bolder;
+			padding: 2px;
+			cursor: pointer;
+		}
+
+		.have-title:hover .title {
+			display: block;
+			opacity: .8;
+		}
+
+		.title {
+			padding: 2px 5px;
+			background: #333;
+			transition: .4s 0s ease-in-out;
+			border: #333 1.5px solid;
+			border-radius: 5px;
+			color: white;
+			margin-left: 10px;
+			position: absolute;
+			z-index: 5;
+			display: none;
+		}
+
+		.have-click-info {
+			margin-top: 10px;
+			cursor: help;
+			display: inline-block;
+			position: relative;
+		}
+
+		.have-click-info:hover .click-info {
+			display: block;
+			opacity: .8;
+		}
+
+		.click-info {
+			padding: 10px;
+			background: white;
+			width: 200px;
+			transition: .4s 0s ease-in-out;
+			border: lightgrey 1px solid;
+			font-weight: normal;
+			color: black;
+			cursor: default;
+			margin: -15px 0 0 20px;
+			position: absolute;
+			z-index: 5;
+			display: none;
+		}
+
+		.info-close {
+			position: absolute;
+			right: 10px;
+			border: none;
+			height: fit-content;
+			width: fit-content;
+			padding: 2px;
+			cursor: pointer;
+			outline: none;
+			background: none;
+			top: 5px;
+		}
+
+		.btn {
+			font-size: 1rem;
+			font-weight: normal;
+			text-align: center;
+			display: block;
+			cursor: pointer;
+			color: white;
+			background: var(--themeColor);
+			border: var(--themeColor) 1px solid;
+			width: fit-content;
+			height: fit-content;
+			padding: 5px 10px;
+			transition: .1s ease-in;
+		}
+
+		.form-data {
+			display: flex;
+			margin-bottom: 5px;
+			flex-direction: column;
+		}
+
+
+		label {
+			font-size: 1rem;
+			margin-bottom: 5px;
+		}
+
+		input,
+		textarea {
+			height: 35px;
+			border: #aaa 1px solid;
+			font-size: 1rem;
+			padding-left: 5px;
+		}
+
+		.lead {
+			color: var(--themeColor);
+			font-size: 1.5rem;
+			display: flex;
+			align-items: center;
+		}
+
+		.btn:hover {
+			color: var(--themeColor);
+			background: white;
+		}
+
+		/* LAYOUT CSS */
+		.body-div {
+			transition: margin .5s .2s ease;
+		}
+
+		body {
+			position: relative;
+			z-index: 20;
+			min-height: 100vh;
+		}
+
+		.container {
+			padding: 80px 10px 0 10px;
+			transition: margin .5s .2s ease;
+		}
+
+
+		#loading {
+			display: none;
+			position: fixed;
+			padding: 30px;
+			font-size: 2rem;
+			gap: 10px;
+			flex-direction: column;
+			align-items: center;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			max-width: 600px;
+			overflow: hidden;
+			box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.4), 0 1px 4px 0 rgba(0, 0, 0, 0.4);
+			height: fit-content;
+			background: rgba(255, 255, 255, 1);
+		}
+
+		.loader {
+			overflow: hidden;
+		}
+
+		.loader::before {
+			content: "";
+			box-sizing: border-box;
+			display: block;
+			width: 80px;
+			height: 80px;
+			text-align: center;
+			border-radius: 50%;
+			border: 3px solid lightgray;
+			border-top-color: var(--themeColor);
+			animation-name: load;
+			z-index: 3;
+			animation-duration: 1s;
+			animation-iteration-count: infinite;
+			animation-timing-function: linear;
+			animation-timing-function: ease-in-out;
+		}
+
+		@keyframes load {
+			to {
+				transform: rotate(360deg);
+			}
+		}
+
+
+		@media(min-width: 750px) {
+			.container {
+				padding: 80px 150px 0 150px;
+			}
+		}
+
+		@media(min-width: 1050px) {
+			.container {
+				padding: 80px 180px 0 180px;
+			}
+		}
+	</style>
+	{% block style %}
+
+	{%endblock%}
+</head>
+
+<body>
+	<div id="overlay"></div>
+	<div id="loading" class="loading">
+		<img src="/static/HandicraftsSellersLogo2.jpg" alt="">
+		<h4>Loading...</h4>
+		<div class="loader"></div>
+	</div>
+	<div class="body-div" id="body">{% include 'includes/_seller-navbar.html' %}
+		<div class="container" id="container">
+			{% with messages =
+				get_flashed_messages(with_categories=true) %} {% if messages %} {% for
+				category, msg in messages %}
+			<div class="flash-div {{category|safe}}" id="flash-div">
+				<div class="flash-{{category|safe}}" id="flash">{{msg|safe}}</div>
+				<div class="flash-close" id="flash-close">&times;</div>
+			</div>
+			{% endfor %} {% endif %} {% endwith %}
+			{% block body %} {% endblock %}
+		</div>
+
+	</div>
+	<div class="footer-div" id="footer-div">
+		{% include 'includes/_seller-footer.html' %}
+	</div>
+	<script>
+		var loadingDiv = document.getElementById('loading');
+		function loading() {
+			loadingDiv.style.display = 'flex';
+			document.getElementById('body').style.opacity = '0';
+			document.getElementById('footer-div').style.opacity = '0';
+			document.getElementById('navbar').style.opacity = '0';
+			document.title = "Loading...";
+		}
+
+
+		var flashCloser = document.getElementById('flash-close');
+		var flashDiv = document.getElementById('flash-div');
+		flashCloser.addEventListener('click', () => {
+			flashDiv.style.display = 'none';
+		});
+		setTimeout(() => {
+			document.getElementById('flash-div').style.display = 'none';
+		}, 10000);
+
+		function showInfo(id) {
+			document.getElementById(id).style.display = 'block';
+			setTimeout(() => {
+				document.getElementById(id).style.display = 'none';
+			}, 10000);
+		}
+	</script>
+	{% block script %}
+	{% endblock %}
+</body>
+
+</html>

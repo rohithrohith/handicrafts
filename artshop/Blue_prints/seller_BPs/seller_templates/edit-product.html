@@ -1,0 +1,86 @@
+{% extends 'seller-layout.html' %}
+{% block title %}Handicrafts sellers | Edit {{data.product_name|safe}}{% endblock %}
+{% block body %}
+
+
+<head>
+	<style>
+		.edit-prod-container {
+			padding: 20px 0;
+		}
+
+		.edit-form-div {
+			margin-top: 10px;
+			border-radius: 5px;
+		}
+
+		.edit-form {
+			display: flex;
+			flex-direction: column;
+		}
+
+		textarea {
+			padding: 5px;
+			height: 100px;
+		}
+
+		.save-btn {
+			margin-top: 5px;
+			width: fit-content;
+			height: fit-content;
+			padding: 5px 10px;
+			border: var(--themeColor) solid 1px;
+			color: white;
+			background: var(--themeColor);
+		}
+
+		.save-btn:hover {
+			background: none;
+			color: var(--themeColor);
+		}
+
+		@media(min-width: 1024px) {
+			.edit-form-div {
+				width: 50%;
+			}
+		}
+	</style>
+</head>
+<div class="edit-prod-container">
+	<h1 class="lead"><i class="fas fa-edit" style="margin-right: 10px;"></i>Edit product '{{data.product_name|safe}}'
+	</h1>
+	<div class="edit-form-div">
+		<form onsubmit="loading()" method="POST" class="edit-form"
+			action="/seller.handicrafts/edit/product/{{data.product_id|safe}}">
+			<div class="form-data">
+				<label for="edited-name">Name:</label>
+				<input type="text" name="edited-name" id="edited-name" value="{{data.product_name|safe}}" />
+			</div>
+			<div class="form-data">
+				<label for="edited-type">Product type:</label>
+				<input type="text" name="edited-type" id="edited-type" value="{{data.product_type|safe}}" />
+			</div>
+			<div class="form-data">
+				<label for="edited-quantity">Quantity:</label>
+				<input type="number" name="edited-quantity" id="edited-quantity"
+					value="{{data.product_quantity_left|safe}}" />
+			</div>
+			<div class="form-data">
+				<label for="edited-price">Price:</label>
+				<input type="number" name="edited-price" id="edited-price" value="{{data.price|safe}}" />
+			</div>
+			<div class="form-data">
+				<label for="edited-price">Description:</label>
+				<textarea name="edited-desc" id="edited-desc" rows="10" cols="10" minlength="400">
+{{data.product_desc|safe}}</textarea>
+			</div>
+			<div class="form-data">
+				<input type="submit" value="Save changes" class="save-btn" />
+			</div>
+		</form>
+	</div>
+</div>
+<script>
+	CKEDITOR.replace('edited-desc');
+</script>
+{% endblock %}

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/b5f6f82057.js" crossorigin="anonymous"></script>
+    <title>Handicrafts administrator</title>
+    <style>
+        * {
+            font-family: 'nunito', sans-serif;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body,
+        html {
+            height: 100%;
+        }
+
+        body {
+            position: relative;
+            min-height: 100vh;
+            background: rgba(233, 233, 233, 0.2);
+        }
+
+        a {
+            color: black;
+            text-decoration: none;
+        }
+
+
+        .container {
+            padding: 80px 150px 0 150px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .flash-div {
+            display: flex;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            align-items: center;
+            padding: 0 20px;
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .success {
+            padding: 5px 10px;
+            background: rgba(212, 237, 218, .7);
+            border: #d4edda solid 2px;
+        }
+
+        .error {
+            padding: 5px 10px;
+            background: rgba(248, 215, 218, .7);
+            border: #f8d7da solid 2px;
+        }
+
+        .flash-error {
+            color: #721c24;
+        }
+
+        .flash-success {
+            color: #155724;
+        }
+
+        .flash-close {
+            font-size: 1.2rem;
+            font-weight: bolder;
+            padding: 2px;
+            cursor: pointer;
+        }
+
+        /*  GENERAL CSS */
+        .lead {
+            font-weight: normal;
+
+        }
+
+        .form-data {
+            display: flex;
+            margin-bottom: 10px;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: .9rem;
+        }
+
+        .input {
+            width: 400px;
+            height: 30px;
+        }
+
+        .btn {
+            padding: 5px 10px;
+            width: fit-content;
+            margin: 5px 0;
+            height: fit-content;
+            display: block;
+            background: #222;
+            border: #222 1px solid;
+            color: white;
+            outline: none;
+            cursor: pointer;
+            transition: background .1s ease-in-out;
+        }
+
+        .btn:hover {
+            color: #222;
+            background: white;
+        }
+
+        @media(max-width:750px) {
+            .container {
+                padding: 80px 10px 0 10px;
+            }
+
+            nav {
+                padding: 10px;
+            }
+
+            .input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="body-div" id="body">
+        {% include 'adminTemplates/includes/_navbar.html' %}
+
+        <div class="container" id="container">
+            {% with messages =
+				get_flashed_messages(with_categories=true) %} {% if messages %} {% for
+				category, msg in messages %}
+            <div class="flash-div {{category|safe}}" id="flash-div">
+                <div class="flash-{{category|safe}}" id="flash">{{msg|safe}}</div>
+                <div class="flash-close" id="flash-close">&times;</div>
+            </div>
+            {% endfor %} {% endif %} {% endwith %}
+            {% block body %} {% endblock %}
+        </div>
+    </div>
+</body>
+<script>
+    var flashCloser = document.getElementById('flash-close');
+    var flashDiv = document.getElementById('flash-div');
+    flashCloser.addEventListener('click', () => {
+        flashDiv.style.display = 'none';
+    });
+    setTimeout(() => {
+        document.getElementById('flash-div').style.display = 'none';
+    }, 10000);
+
+
+</script>
+
+</html>
